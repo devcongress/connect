@@ -208,4 +208,12 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "Members Role"
     assert_select "a[href='/@pat']"
   end
+
+  test "support links use the stable DevCongress donation path" do
+    get "/"
+
+    assert_response :success
+    assert_select "a[href='https://devcongress.org/donate']", text: "Support us", count: 3
+    assert_not_includes response.body, "paystack.shop/pay/devcongress-meetup"
+  end
 end
