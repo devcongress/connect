@@ -22,20 +22,16 @@
     <p class="mt-6 text-sm text-[var(--dc-text-muted)]">Free, always. No paywalls, no gatekeeping.</p>
   </div>
 
-  <%# Live panel: the newest listed developers %>
+  <%# A daily rotation of public builders with useful profiles first %>
   <div class="overflow-hidden rounded-2xl border-4 border-[#111] bg-white shadow-[8px_8px_0_var(--dc-pink)]">
     <div class="flex items-center justify-between gap-4 border-b-4 border-[#111] bg-[var(--dc-yellow)] px-5 py-3">
-      <span class="text-sm font-semibold"><%= dev_mark("connect") %> — newest builders</span>
+      <span class="text-sm font-semibold"><%= dev_mark("connect") %> — Meet some builders</span>
       <span class="text-xs font-semibold tracking-[0.06em] text-[var(--dc-pink)]">● Live</span>
     </div>
     <div class="space-y-3 bg-[var(--dc-bg)] p-5">
-      <% if @newest.any? %>
-        <% @newest.each do |developer| %>
-          <% if developer.visible_to?(current_user) %>
-            <%= render "home/developer_card", developer: %>
-          <% else %>
-            <%= render "home/private_developer_card", developer: %>
-          <% end %>
+      <% if @hero_builders.any? %>
+        <% @hero_builders.each do |developer| %>
+          <%= render "home/developer_card", developer: %>
         <% end %>
       <% else %>
         <p class="py-10 text-center text-[var(--dc-text-mid)]">Be the first builder on Connect.</p>

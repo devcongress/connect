@@ -10,23 +10,25 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", /Africa.s builders/
   end
 
-  test "new profiles the viewer can't see show as anonymous placeholders" do
-    create_profile!(name: "Pat Public", handle: "pat", visibility: :everyone)
+  test "builder sections share one public rotation without duplicates" do
+    skill = Skill.create!(name: "Ruby")
+    public_profiles = 6.times.map do |index|
+      profile = create_profile!(name: "Public Builder #{index}", visibility: :everyone)
+      profile.profile_skills.create!(skill:)
+      profile
+    end
     create_profile!(name: "Mo Members", handle: "momo", visibility: :members)
     create_profile!(name: "Hal Hidden", handle: "hal", visibility: :hidden)
 
     get root_path
-    assert_includes response.body, "Pat Public"
+
+    assert_response :success
+    assert_includes response.body, "Meet some builders"
     assert_not_includes response.body, "Mo Members"
     assert_not_includes response.body, "Hal Hidden"
-    assert_equal 2, response.body.scan("A new builder joined").size
-    assert_includes response.body, "Members-only profile."
-
-    login_user(create_user!)
-    get root_path
-    assert_includes response.body, "Mo Members"
-    assert_not_includes response.body, "Hal Hidden"
-    assert_includes response.body, "Their profile is private."
-    assert_not_includes response.body, "Members-only profile."
+    assert_not_includes response.body, "A new builder joined"
+    public_profiles.each do |profile|
+      assert_select "a[href=?]", developer_page_path(profile.handle), count: 1
+    end
   end
 end
