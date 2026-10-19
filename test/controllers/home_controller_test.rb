@@ -31,4 +31,24 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", developer_page_path(profile.handle), count: 1
     end
   end
+
+  test "projects use a public rotation instead of recency" do
+    public_owner = create_profile!(visibility: :everyone)
+    members_owner = create_profile!(visibility: :members)
+    public_projects = 3.times.map do |index|
+      Showcase::Project.create!(owner: public_owner, title: "Public Project #{index}")
+    end
+    Showcase::Project.create!(owner: public_owner, title: "Members Project", visibility: :members)
+    Showcase::Project.create!(owner: members_owner, title: "Members Owner Project")
+
+    get root_path
+
+    assert_response :success
+    assert_includes response.body, "Explore projects"
+    assert_not_includes response.body, "Members Project"
+    assert_not_includes response.body, "Members Owner Project"
+    public_projects.each do |project|
+      assert_select "a[href=?]", public_project_path(project.slug), count: 1
+    end
+  end
 end

@@ -1,12 +1,8 @@
-require "openssl"
-
 # Chooses the public builders shown on the homepage for one daily rotation.
 # A keyed digest gives every profile in a pool a stable ordering without an
 # unbounded database random sort or a user-controlled ranking signal.
 class HomepageBuilderSelector
   LIMIT = 6
-  ROTATION_PERIOD = 1.day
-  DIGEST = "SHA256"
   CONTEXT = "homepage-builders"
 
   def self.call(**) = new(**).call
@@ -18,7 +14,7 @@ class HomepageBuilderSelector
     secret: Rails.application.secret_key_base
   )
     @scope = scope
-    @period_key = period.to_date.iso8601
+    @period = period
     @limit = limit
     @secret = secret
   end
@@ -42,9 +38,6 @@ class HomepageBuilderSelector
   end
 
   def ranked(ids)
-    ids.sort_by do |id|
-      digest = OpenSSL::HMAC.hexdigest(DIGEST, @secret, "#{CONTEXT}:#{@period_key}:#{id}")
-      [digest, id]
-    end
+    DeterministicDailyOrder.call(ids, context: CONTEXT, period: @period, secret: @secret)
   end
 end
