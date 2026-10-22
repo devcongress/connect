@@ -17,11 +17,13 @@ class CompanyPolicy < ::ResourcePolicy
   # Core attributes
 
   def permitted_attributes_for_create
-    [:name, :slug, :website, :description, :city, :country]
+    [:name, :slug, :logo, :tagline, :organization_type, :industry, :founded_year,
+      :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
   end
 
   def permitted_attributes_for_read
-    [:name, :slug, :website, :description, :city, :country]
+    [:name, :slug, :logo, :tagline, :organization_type, :industry, :founded_year,
+      :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
   end
 
   # Associations
