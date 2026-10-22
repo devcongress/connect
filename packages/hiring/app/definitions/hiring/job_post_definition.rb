@@ -30,6 +30,10 @@ module Hiring
 
     input :title, placeholder: "e.g. Senior Backend Engineer, or Landing page for a bakery",
       wrapper: {class: "col-span-full"}
+    input :description,
+      hint: "Help people decide whether to apply. Cover the work, outcomes, requirements, team, and what success looks like." do |field|
+      render Forms::JobDescriptionInput.new(field:)
+    end
     # Changing the type re-renders the form: timing fields show for gigs,
     # contracts and internships, and internships can be marked unpaid.
     input :employment_type, label: "Type", as: :select, pre_submit: true,
