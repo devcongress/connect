@@ -83,7 +83,7 @@ gem "solid_errors", "~> 0.7.0"
 gem "litestream", "~> 0.14.0"
 
 # Outgoing mail in production [https://github.com/resend/resend-ruby]
-gem "resend", "~> 1.3"
+gem "resend", "~> 1.18"
 
 gem "rails_pulse", "~> 0.4.1"
 

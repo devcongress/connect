@@ -502,7 +502,7 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    resend (1.17.0)
+    resend (1.18.0)
       base64
       httparty (>= 0.22.0)
     rexml (3.4.4)
@@ -708,7 +708,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 8.1.4)
   rails_pulse (~> 0.4.1)
-  resend (~> 1.3)
+  resend (~> 1.18)
   rodauth-omniauth (~> 0.6.2)
   rodauth-rails (~> 2.2)
   rotp (~> 6.3)
@@ -894,7 +894,7 @@ CHECKSUMS
   regexp_parser (2.13.1) sha256=5aedb6b7c35688f51e86eef17a15374dfd287c83f4ca644b2c5f3ec50a33b44b
   reline (0.7.0) sha256=5b012d8e55dbf9d450f12bde2cf7d15ff546ae80b3f8f3b30e570d431815583d
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
-  resend (1.17.0) sha256=027806958c1ff29ae6b37d66e16e20441bf06607d1718aefbb412e634d5b74c9
+  resend (1.18.0) sha256=b35b7292c4117599734039c49c11677cd9386afb320e7a9d0728a43c18a69baa
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   roda (3.108.0) sha256=a209acc5c885c7c9cfe703ad985b343026f79f67949932dd739b83e5a129ffbd
   rodauth (2.48.0) sha256=14ceb4d48b2c224f9dfe3cfe36b29f4a34c95215c1ea204400f48ee6a39d3c3a
