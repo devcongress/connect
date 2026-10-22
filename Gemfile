@@ -80,7 +80,7 @@ gem "mission_control-jobs", "~> 1.3"
 
 gem "solid_errors", "~> 0.7.0"
 
-gem "litestream", "~> 0.14.0"
+gem "litestream", "~> 0.16.1"
 
 # Outgoing mail in production [https://github.com/resend/resend-ruby]
 gem "resend", "~> 1.3"
