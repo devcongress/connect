@@ -85,7 +85,7 @@ gem "litestream", "~> 0.14.0"
 # Outgoing mail in production [https://github.com/resend/resend-ruby]
 gem "resend", "~> 1.3"
 
-gem "rails_pulse", "~> 0.4.1"
+gem "rails_pulse", "~> 0.5.0"
 
 gem "bcrypt", "~> 3.1"
 
