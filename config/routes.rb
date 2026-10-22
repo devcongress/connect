@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     get "jobs", to: "jobs#index", as: :public_jobs
     get "jobs/:id", to: "jobs#show", as: :public_job
     get "companies", to: "companies#index", as: :public_companies
+    get "companies/:slug/logo", to: "company_logos#show", as: :public_company_logo
     get "companies/:slug", to: "companies#show", as: :public_company
     get "projects", to: "projects#index", as: :public_projects
     get "projects/:slug", to: "projects#show", as: :public_project

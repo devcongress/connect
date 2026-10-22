@@ -101,6 +101,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_110000) do
     t.datetime "updated_at", null: false
     t.datetime "jobs_trusted_at"
     t.integer "personal_owner_id"
+    t.string "tagline"
+    t.string "organization_type"
+    t.string "industry"
+    t.integer "founded_year"
+    t.string "github_url"
+    t.string "linkedin_url"
+    t.string "x_url"
     t.index ["name"], name: "index_companies_on_name", unique: true
     t.index ["personal_owner_id"], name: "index_companies_on_personal_owner_id", unique: true
     t.index ["slug"], name: "index_companies_on_slug", unique: true

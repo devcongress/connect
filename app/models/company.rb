@@ -6,10 +6,17 @@
 #  city              :string
 #  country           :string
 #  description       :text
+#  founded_year      :integer
+#  github_url        :string
+#  industry          :string
 #  jobs_trusted_at   :datetime
+#  linkedin_url      :string
 #  name              :string           not null
+#  organization_type :string
 #  slug              :string           not null
+#  tagline           :string
 #  website           :string
+#  x_url             :string
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  personal_owner_id :integer
@@ -27,7 +34,17 @@
 class Company < ::ResourceRecord
   # add concerns above.
 
+  include ActiveShrine::Model
+
   # add constants above.
+  ORGANIZATION_TYPES = {
+    "Business" => "business",
+    "Nonprofit" => "nonprofit",
+    "Government" => "government",
+    "Educational institution" => "educational_institution",
+    "Community or association" => "community",
+    "Other" => "other"
+  }.freeze
 
   # add enums above.
   path_parameter :slug
@@ -49,6 +66,7 @@ class Company < ::ResourceRecord
   # add has_many associations above.
 
   # add attachments above.
+  has_one_attached :logo, uploader: ::CompanyLogoUploader
   scope :associated_with_user, ->(user) { joins(:company_users).where(company_users: {user_id: user.id}) }
   scope :organizations, -> { where(personal_owner_id: nil) }
   scope :search, ->(query) {
@@ -63,9 +81,14 @@ class Company < ::ResourceRecord
 
   validates :name, presence: true
   validates :website, **WebUrl.validation
+  validates :github_url, :linkedin_url, :x_url, **WebUrl.validation
   validates :country, **World.country_validation
+  validates :tagline, length: {maximum: 160}, allow_blank: true
+  validates :industry, length: {maximum: 100}, allow_blank: true
+  validates :organization_type, inclusion: {in: ORGANIZATION_TYPES.values}, allow_blank: true
   validates :slug, presence: true, uniqueness: true,
     format: {with: /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/, message: "may only contain lowercase letters, numbers and dashes"}
+  validate :founded_year_is_reasonable
   # add validations above.
 
   before_validation { self.slug = name.to_s.parameterize if slug.blank? }
@@ -85,6 +108,8 @@ class Company < ::ResourceRecord
 
   # Personal spaces show as the person; their name can change after setup.
   def display_name = personal_profile&.name || name
+
+  def organization_type_label = ORGANIZATION_TYPES.key(organization_type)
 
   def to_label = personal? ? "#{display_name} (personal)" : name
 
@@ -109,4 +134,11 @@ class Company < ::ResourceRecord
   end
 
   # add methods above. add private methods below.
+  private
+
+  def founded_year_is_reasonable
+    return if founded_year.blank? || founded_year.between?(1000, Date.current.year)
+
+    errors.add(:founded_year, "must be between 1000 and #{Date.current.year}")
+  end
 end
