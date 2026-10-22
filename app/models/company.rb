@@ -51,13 +51,6 @@ class Company < ::ResourceRecord
   # add attachments above.
   scope :associated_with_user, ->(user) { joins(:company_users).where(company_users: {user_id: user.id}) }
   scope :organizations, -> { where(personal_owner_id: nil) }
-  scope :search, ->(query) {
-    term = "%#{sanitize_sql_like(query.to_s.strip.downcase)}%"
-    where(
-      "LOWER(companies.name) LIKE :term OR LOWER(companies.description) LIKE :term " \
-      "OR LOWER(companies.city) LIKE :term OR LOWER(companies.country) LIKE :term", term:
-    )
-  }
 
   # add scopes above.
 

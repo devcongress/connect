@@ -200,47 +200,6 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "company directory lists organizations and excludes personal posting spaces" do
-    @company.update!(description: "Builds useful tools.", city: "Accra", country: "Ghana", website: "https://acme.test")
-    quiet = create_company!(name: "Quiet Works")
-    quiet.update!(description: "A distributed product studio.", city: "Lagos", country: "Nigeria")
-    personal = Company.personal_for!(@public.user)
-
-    get "/companies"
-
-    assert_response :success
-    assert_select "h1", "Companies"
-    assert_select "a[href='/companies/#{@company.slug}']"
-    assert_select "a[href='/companies/#{quiet.slug}']"
-    assert_select "a[href='/companies/#{personal.slug}']", count: 0
-    assert_select "p", text: "2 companies"
-    assert_includes response.body, "1 open job"
-
-    get "/companies", params: {q: "acme"}
-    assert_includes response.body, "Acme Labs"
-    assert_not_includes response.body, "Quiet Works"
-
-    get "/companies", params: {country: "Nigeria"}
-    assert_includes response.body, "Quiet Works"
-    assert_not_includes response.body, "Acme Labs"
-
-    login_user(create_user!)
-    get "/companies", params: {q: "acme"}
-    assert_includes response.body, "2 open jobs"
-  end
-
-  test "the landing page company count links to the same organizations as the directory" do
-    Company.personal_for!(@public.user)
-
-    get "/"
-
-    assert_select "a.dc-box[href='/companies']" do
-      assert_select "span", text: Company.organizations.count.to_s
-      assert_select "span", text: "Companies"
-    end
-    assert_select "nav[aria-label='Primary'] a[href='/companies']", text: "Companies", minimum: 1
-  end
-
   test "the landing page only shows what the viewer can see" do
     get "/"
     assert_includes response.body, "Pat Public"

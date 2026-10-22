@@ -20,7 +20,6 @@
       <p class="dc-footer-label">Connect</p>
       <ul class="dc-footer-links">
         <li><%= link_to "Developers", developers_directory_path, class: "dc-footer-chip" %></li>
-        <li><%= link_to "Companies", public_companies_path, class: "dc-footer-chip" %></li>
         <li><%= link_to "Projects", public_projects_path, class: "dc-footer-chip" %></li>
         <li><%= link_to "Jobs & gigs", public_jobs_path, class: "dc-footer-chip" %></li>
         <li><%= link_to "Post a job", (current_user ? "/dashboard" : rodauth(:user).create_account_path), class: "dc-footer-chip" %></li>

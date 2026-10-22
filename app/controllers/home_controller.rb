@@ -5,7 +5,7 @@ class HomeController < Site::BaseController
     listed = Developers::Profile.visible_to(current_user)
     @stats = {
       developers: listed.count,
-      companies: Company.organizations.count,
+      companies: Company.count,
       open_jobs: Hiring::JobPost.visible_to(current_user).count
     }
     homepage_builders = HomepageBuilderSelector.call

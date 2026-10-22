@@ -31,7 +31,6 @@ Rails.application.routes.draw do
     get "@:handle", to: "developers#show", as: :developer_page, constraints: {handle: /[A-Za-z0-9_-]+/}
     get "jobs", to: "jobs#index", as: :public_jobs
     get "jobs/:id", to: "jobs#show", as: :public_job
-    get "companies", to: "companies#index", as: :public_companies
     get "companies/:slug", to: "companies#show", as: :public_company
     get "projects", to: "projects#index", as: :public_projects
     get "projects/:slug", to: "projects#show", as: :public_project
