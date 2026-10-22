@@ -44,14 +44,17 @@
 <div class="py-12 sm:py-24">
   <ul class="dc-container grid grid-cols-1 gap-8 sm:grid-cols-3">
     <% [
-         [@stats[:developers], "Developers listed", "Searchable profiles with skills and experience."],
-         [@stats[:companies], "Companies", "Teams hiring from the community."],
-         [@stats[:open_jobs], "Open jobs", "Live roles you can apply to today."]
-       ].each do |count, label, body| %>
-      <li class="dc-box flex flex-col gap-2 p-8 shadow-[6px_6px_0_var(--dc-pink)]">
-        <span class="dc-heading text-[clamp(3.5rem,8vw,5rem)] leading-none tracking-[-0.02em] text-[var(--dc-pink)]"><%= number_with_delimiter(count) %></span>
-        <span class="text-[1.375rem] font-bold leading-snug"><%= label %></span>
-        <p class="text-[var(--dc-text-muted)]"><%= body %></p>
+         [@stats[:developers], "Developers listed", "Searchable profiles with skills and experience.", developers_directory_path, "Browse developers"],
+         [@stats[:companies], "Companies", "Teams hiring from the community.", public_companies_path, "Browse companies"],
+         [@stats[:open_jobs], "Open jobs", "Live roles you can apply to today.", public_jobs_path, "Browse jobs"]
+       ].each do |count, label, body, path, link_label| %>
+      <li>
+        <%= link_to path, class: "dc-box flex h-full flex-col gap-2 p-8 shadow-[6px_6px_0_var(--dc-pink)]" do %>
+          <span class="dc-heading text-[clamp(3.5rem,8vw,5rem)] leading-none tracking-[-0.02em] text-[var(--dc-pink)]"><%= number_with_delimiter(count) %></span>
+          <span class="text-[1.375rem] font-bold leading-snug"><%= label %></span>
+          <span class="text-[var(--dc-text-muted)]"><%= body %></span>
+          <span class="dc-link mt-auto pt-3"><%= link_label %> →</span>
+        <% end %>
       </li>
     <% end %>
   </ul>
@@ -78,6 +81,7 @@
        title: safe_join(["Hire from a community that ", tag.span("ships", class: "text-[var(--dc-pink)]"), "."]),
        body: "Post a role, a freelance gig or an internship, and hear from developers whose skills and work you can see up front.",
        cta: [signed_in ? "Set up a company" : "Start hiring", signed_in ? "/setup/company/new" : join_path],
+       secondary_cta: ["Browse companies", public_companies_path],
        steps: [
          [["Hire as a company, or post a gig ", "as yourself", "."], "Set up a company and invite recruiters, or post under your own name."],
          [["Post a job, a gig or an ", "internship", "."], "Take applications here, link to your own page, or both."],
@@ -102,7 +106,12 @@
           <h2 class="dc-heading text-[clamp(1.75rem,3vw,2.5rem)] leading-snug"><%= audience[:title] %></h2>
         </div>
         <p class="text-[var(--dc-text-mid)]"><%= audience[:body] %></p>
-        <%= link_to audience[:cta].first, audience[:cta].last, class: "dc-btn dc-btn-primary dc-btn-lg self-start" %>
+        <div class="flex flex-wrap gap-3">
+          <%= link_to audience[:cta].first, audience[:cta].last, class: "dc-btn dc-btn-primary dc-btn-lg self-start" %>
+          <% if audience[:secondary_cta] %>
+            <%= link_to audience[:secondary_cta].first, audience[:secondary_cta].last, class: "dc-btn dc-btn-outline dc-btn-lg self-start" %>
+          <% end %>
+        </div>
       </div>
       <ol class="dc-numbered">
         <% audience[:steps].each_with_index do |(step, body), number| %>
