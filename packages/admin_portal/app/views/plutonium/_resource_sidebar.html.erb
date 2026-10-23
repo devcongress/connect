@@ -12,6 +12,7 @@
           n.item "Project credits", url: resource_url_for(Showcase::ProjectContributor, parent: nil)
         end
         m.item "Skills", url: resource_url_for(Skill, parent: nil), icon: Phlex::TablerIcons::Tools
+        m.item "Credentials", url: credential_awards_path, icon: Phlex::TablerIcons::Certificate
         m.item "Accounts", icon: Phlex::TablerIcons::Users do |n|
           n.item "Users", url: resource_url_for(User, parent: nil)
           n.item "Admins", url: resource_url_for(Admin, parent: nil)

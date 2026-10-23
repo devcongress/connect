@@ -30,6 +30,8 @@ class Admin < ResourceRecord
   # add has_one associations above.
 
   # add has_many associations above.
+  has_many :created_credential_awards, class_name: "Credentials::Award", foreign_key: :created_by_admin_id, dependent: :restrict_with_error
+  has_many :credential_events, class_name: "Credentials::Event", dependent: :nullify
 
   # add attachments above.
 

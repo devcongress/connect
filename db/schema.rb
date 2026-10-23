@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_14_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_23_090000) do
   create_table "active_shrine_attachments", force: :cascade do |t|
     t.string "record_type"
     t.bigint "record_id"
@@ -140,6 +140,70 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_090000) do
     t.index ["company_id", "user_id"], name: "index_company_users_on_company_id_and_user_id", unique: true
     t.index ["company_id"], name: "index_company_users_on_company_id"
     t.index ["user_id"], name: "index_company_users_on_user_id"
+  end
+
+  create_table "credentials_awards", force: :cascade do |t|
+    t.integer "definition_id", null: false
+    t.integer "recipient_id", null: false
+    t.string "public_id", null: false
+    t.string "recipient_name", null: false
+    t.text "evidence_summary", null: false
+    t.string "criteria_version", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "consented_at"
+    t.datetime "issued_at"
+    t.datetime "expires_at"
+    t.datetime "revoked_at"
+    t.text "revoked_reason"
+    t.integer "supersedes_id"
+    t.integer "created_by_admin_id", null: false
+    t.integer "updated_by_admin_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_admin_id"], name: "index_credentials_awards_on_created_by_admin_id"
+    t.index ["definition_id", "recipient_id"], name: "index_credentials_awards_on_current_achievement", unique: true, where: "status IN (0, 1)"
+    t.index ["definition_id"], name: "index_credentials_awards_on_definition_id"
+    t.index ["public_id"], name: "index_credentials_awards_on_public_id", unique: true
+    t.index ["recipient_id"], name: "index_credentials_awards_on_recipient_id"
+    t.index ["status", "created_at"], name: "index_credentials_awards_on_status_and_created_at"
+    t.index ["supersedes_id"], name: "index_credentials_awards_on_supersedes_id"
+    t.index ["updated_by_admin_id"], name: "index_credentials_awards_on_updated_by_admin_id"
+  end
+
+  create_table "credentials_definitions", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "short_description", null: false
+    t.text "description", null: false
+    t.text "eligibility_criteria", null: false
+    t.text "evidence_requirements", null: false
+    t.string "issuing_authority", default: "DevCongress", null: false
+    t.json "approver_roles", default: ["super_admin", "admin"], null: false
+    t.string "criteria_version", null: false
+    t.text "lifecycle_rules", null: false
+    t.text "does_not_prove", null: false
+    t.string "badge_alt_text", null: false
+    t.integer "expires_after_months"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_credentials_definitions_on_slug", unique: true
+  end
+
+  create_table "credentials_events", force: :cascade do |t|
+    t.integer "award_id", null: false
+    t.integer "admin_id"
+    t.integer "user_id"
+    t.string "event_type", null: false
+    t.text "reason"
+    t.json "changeset", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_credentials_events_on_admin_id"
+    t.index ["award_id", "created_at"], name: "index_credentials_events_on_award_id_and_created_at"
+    t.index ["award_id"], name: "index_credentials_events_on_award_id"
+    t.index ["event_type", "created_at"], name: "index_credentials_events_on_event_type_and_created_at"
+    t.index ["user_id"], name: "index_credentials_events_on_user_id"
   end
 
   create_table "developers_experience_skills", force: :cascade do |t|
@@ -414,6 +478,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_14_090000) do
   add_foreign_key "company_user_invites", "users"
   add_foreign_key "company_users", "companies"
   add_foreign_key "company_users", "users"
+  add_foreign_key "credentials_awards", "admins", column: "created_by_admin_id", on_delete: :restrict
+  add_foreign_key "credentials_awards", "admins", column: "updated_by_admin_id", on_delete: :nullify
+  add_foreign_key "credentials_awards", "credentials_awards", column: "supersedes_id", on_delete: :nullify
+  add_foreign_key "credentials_awards", "credentials_definitions", column: "definition_id", on_delete: :restrict
+  add_foreign_key "credentials_awards", "developers_profiles", column: "recipient_id", on_delete: :restrict
+  add_foreign_key "credentials_events", "admins", on_delete: :nullify
+  add_foreign_key "credentials_events", "credentials_awards", column: "award_id", on_delete: :cascade
+  add_foreign_key "credentials_events", "users", on_delete: :nullify
   add_foreign_key "developers_experience_skills", "developers_experiences", column: "experience_id", on_delete: :cascade
   add_foreign_key "developers_experience_skills", "developers_profile_skills", column: "profile_skill_id", on_delete: :cascade
   add_foreign_key "developers_experiences", "companies"
