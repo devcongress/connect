@@ -77,6 +77,7 @@ class Developers::Profile < Developers::ResourceRecord
   has_many :profile_skills, class_name: "Developers::ProfileSkill", dependent: :destroy
   has_many :skills, through: :profile_skills
   has_many :job_applications, class_name: "Hiring::JobApplication", dependent: :destroy
+  has_many :credential_awards, class_name: "Credentials::Award", foreign_key: :recipient_id, inverse_of: :recipient, dependent: :restrict_with_error
 
   # Network: follows in both directions. Two people who follow each other are
   # connected (see #connections).

@@ -35,3 +35,24 @@ if changed.any?
   Skill.upsert_all(changed, unique_by: :index_skills_on_slug,
     update_only: %i[name category description website_url source_url why_description company_examples content_curated updated_at])
 end
+
+# The first DevCongress credential. Definitions live in the database so later
+# achievements can be added without changing the issuance or verification flow.
+Credentials::Definition.find_or_initialize_by(slug: "community-contributor").tap do |definition|
+  definition.assign_attributes(
+    name: "DevCongress Community Contributor",
+    short_description: "Recognizes a reviewed, accepted contribution that materially advanced a DevCongress program, event, project, or community resource.",
+    description: "The DevCongress Community Contributor credential recognizes someone whose completed contribution created clear value for the DevCongress community. It is awarded only after an authorized DevCongress administrator reviews evidence of the work against the published criteria.",
+    eligibility_criteria: "The recipient must have completed at least one contribution accepted by the responsible DevCongress program, event, or project lead. The contribution must have a concrete outcome that benefited the community, and the recipient's role must be supported by first-party evidence rather than self-report alone.",
+    evidence_requirements: "A reviewer must record a concise account of the contribution and retain or reference first-party evidence such as a merged contribution, published resource, organizer record, program deliverable, or written confirmation from the responsible lead.",
+    issuing_authority: "DevCongress",
+    approver_roles: %w[super_admin admin],
+    criteria_version: "1.0",
+    lifecycle_rules: "This credential does not expire. DevCongress may correct factual errors, revoke a credential when evidence is invalidated or misconduct materially undermines the award, and reissue it when a correction requires a new credential ID. Every lifecycle action requires a reason and remains in the audit trail.",
+    does_not_prove: "This credential does not represent employment by DevCongress, an academic degree, professional licensure, identity verification, or endorsement by LinkedIn. It verifies only the reviewed DevCongress contribution described on this page.",
+    badge_alt_text: "DevCongress Community Contributor credential badge",
+    expires_after_months: nil,
+    active: true
+  )
+  definition.save!
+end

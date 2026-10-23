@@ -12,6 +12,11 @@ DeveloperPortal::Engine.routes.draw do
 
   # Followers, following, connections and suggestions.
   get "network", to: "network#index", as: :network
+  get "credentials", to: "credentials/awards#index", as: :credential_awards
+  get "credentials/:id", to: "credentials/awards#show", as: :credential_award,
+    constraints: {id: /[1-9A-HJ-NP-Za-km-z]{24}/}
+  post "credentials/:id/accept", to: "credentials/awards#accept", as: :accept_credential_award,
+    constraints: {id: /[1-9A-HJ-NP-Za-km-z]{24}/}
 
   # register resources above.
 

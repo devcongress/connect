@@ -35,6 +35,12 @@ Rails.application.routes.draw do
     get "companies/:slug", to: "companies#show", as: :public_company
     get "projects", to: "projects#index", as: :public_projects
     get "projects/:slug", to: "projects#show", as: :public_project
+    get "credentials/:id", to: "credentials#show", as: :public_credential,
+      constraints: {id: /[1-9A-HJ-NP-Za-km-z]{24}/}
+    get "credentials/:id/badge", to: "credentials#badge", as: :credential_badge,
+      defaults: {format: :svg}, constraints: {id: /[1-9A-HJ-NP-Za-km-z]{24}/}
+    get "credentials/:id/certificate", to: "credentials#certificate", as: :credential_certificate,
+      defaults: {format: :svg}, constraints: {id: /[1-9A-HJ-NP-Za-km-z]{24}/}
 
     # Unsubscribe links in emails (no sign-in; the signed token names the user).
     get "unsubscribe/:token", to: "unsubscribes#show", as: :unsubscribe, format: false

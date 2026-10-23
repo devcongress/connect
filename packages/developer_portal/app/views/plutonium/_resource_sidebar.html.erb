@@ -6,6 +6,7 @@
         m.item "Skills", url: resource_url_for(Developers::ProfileSkill, parent: nil), icon: Phlex::TablerIcons::Tools
         m.item "Projects", url: resource_url_for(Showcase::Project, parent: nil), icon: Phlex::TablerIcons::Stack2
         m.item "Credits", url: resource_url_for(Showcase::ProjectContributor, parent: nil), icon: Phlex::TablerIcons::UsersGroup
+        m.item "Credentials", url: developers_profile_scoped_credential_awards_path(developers_profile_scoped: current_scoped_entity), icon: Phlex::TablerIcons::Certificate
         m.item "Network", url: developers_profile_scoped_network_path(developers_profile_scoped: current_scoped_entity), icon: Phlex::TablerIcons::Affiliate
         m.item "Jobs & gigs", url: resource_url_for(Hiring::JobPost, parent: nil), icon: Phlex::TablerIcons::Search
         m.item "My applications", url: resource_url_for(Hiring::JobApplication, parent: nil), icon: Phlex::TablerIcons::Send

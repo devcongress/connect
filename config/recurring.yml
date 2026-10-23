@@ -37,3 +37,9 @@ production:
     queue: default
     schedule: every hour at minute 20
     description: "Close #jobs Slack messages for jobs that have expired"
+
+  credential_expiry:
+    class: Credentials::ExpiryJob
+    queue: default
+    schedule: every hour at minute 35
+    description: "Mark credentials past their configured expiry date as expired"
