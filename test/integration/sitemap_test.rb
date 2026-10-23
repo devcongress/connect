@@ -29,6 +29,7 @@ class SitemapTest < ActionDispatch::IntegrationTest
     assert_equal "application/xml", response.media_type
     locs = Nokogiri::XML(response.body).remove_namespaces!.xpath("//loc").map(&:text)
     assert_includes locs, "http://www.example.com/"
+    assert_includes locs, "http://www.example.com/companies"
     assert_includes locs, "http://www.example.com/@pat"
     assert_includes locs, "http://www.example.com/companies/#{hiring.slug}"
     assert_includes locs, "http://www.example.com/jobs/#{job.to_param}"

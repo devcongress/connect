@@ -1,0 +1,46 @@
+<% content_for :title, "Companies" %>
+<% content_for :description, "Browse companies and organizations hiring from the DevCongress community." %>
+<% filtered = params.values_at(:q, :country).any?(&:present?) %>
+
+<section class="border-b-2 border-[#111]">
+  <div class="dc-container py-16 sm:py-20">
+    <p class="dc-eyebrow">The community</p>
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <h1 class="dc-heading text-[clamp(2.5rem,6vw,4rem)]">Companies</h1>
+      <%= link_to "Set up a company", (current_user ? new_company_setup_path : rodauth(:user).create_account_path), class: "dc-btn dc-btn-white dc-btn-sm" %>
+    </div>
+    <p class="mt-4 max-w-2xl text-[#555]">
+      Browse the teams and organizations on Connect, learn what they do, and see their open roles.
+    </p>
+
+    <%= form_with url: public_companies_path, method: :get, class: "mt-8 grid grid-cols-1 gap-4 sm:grid-cols-[2fr_1fr_auto] sm:items-end", data: {turbo_action: "advance"} do %>
+      <label class="block">
+        <span class="dc-label">Search</span>
+        <input type="search" name="q" value="<%= params[:q] %>" placeholder="Company, description or city" class="dc-input">
+      </label>
+      <%= render "site/shared/filter_select", name: :country, label: "Country", all: "Anywhere", choices: @countries %>
+      <button type="submit" class="dc-btn dc-btn-primary dc-btn-sm">Search</button>
+    <% end %>
+  </div>
+</section>
+
+<section class="dc-container py-12">
+  <div class="mb-6 flex items-center justify-between gap-4 text-sm text-[#555]">
+    <p><%= pluralize(@total, "company") %><%= " match" if filtered %></p>
+    <% if filtered %><%= link_to "Clear filters", public_companies_path, class: "dc-link" %><% end %>
+  </div>
+
+  <% if @companies.any? %>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @companies.each do |company| %>
+        <%= render "site/companies/company_card", company:, job_count: @job_counts.fetch(company.id, 0) %>
+      <% end %>
+    </div>
+    <%= render "site/shared/pagination" %>
+  <% else %>
+    <div class="dc-empty p-12">
+      <p class="dc-heading text-3xl"><%= filtered ? "No companies match that yet." : "No companies yet." %></p>
+      <p class="mt-2 text-[#555]"><%= filtered ? "Try fewer filters." : "Set up a company to be the first." %></p>
+    </div>
+  <% end %>
+</section>

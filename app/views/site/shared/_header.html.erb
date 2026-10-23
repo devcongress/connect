@@ -1,6 +1,6 @@
 <% signed_in = current_user.present? %>
 <% support_url = "https://devcongress.org/donate" %>
-<% links = [["Developers", developers_directory_path], ["Projects", public_projects_path], ["Jobs & gigs", public_jobs_path]] %>
+<% links = [["Developers", developers_directory_path], ["Companies", public_companies_path], ["Projects", public_projects_path], ["Jobs & gigs", public_jobs_path]] %>
 <header class="dc-navbar" data-controller="site-menu" data-action="keydown@document->site-menu#closeOnEscape">
   <div class="dc-container dc-navbar-inner">
     <a href="<%= root_path %>" class="flex shrink-0 items-center gap-2.5" aria-label="DevCongress Connect home">
