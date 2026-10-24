@@ -86,6 +86,22 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_not_includes response.body, "Mo Members"
   end
 
+  test "skill filter can require experience-backed evidence" do
+    experienced = create_profile!(name: "Eva Experienced", handle: "eva", visibility: :everyone)
+    experienced_skill = experienced.profile_skills.create!(skill: @elixir)
+    experience = experienced.experiences.create!(title: "Engineer", company_name: "Acme", started_on: Date.new(2020, 1, 1))
+    experience.profile_skills << experienced_skill
+
+    get "/devs", params: {skill: "elixir"}
+    assert_includes response.body, "Pat Public"
+    assert_includes response.body, "Eva Experienced"
+
+    get "/devs", params: {skill: "elixir", experience: "1"}
+    assert_not_includes response.body, "Pat Public"
+    assert_includes response.body, "Eva Experienced"
+    assert_select "input[name=experience][value='1'][checked]"
+  end
+
   test "skill pages explain the skill and remain visible with no matches" do
     get "/devs", params: {skill: "elixir"}
 
