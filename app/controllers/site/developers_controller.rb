@@ -1,7 +1,5 @@
 module Site
   class DevelopersController < BaseController
-    AVAILABILITY_FILTERS = %w[looking open].freeze
-
     def index
       @selected_skill = Skill.find_by!(slug: params[:skill]) if params[:skill].present?
       scope = Developers::Profile.visible_to(current_user)
@@ -9,11 +7,15 @@ module Site
       @skills = Skill.joins(profile_skills: :profile).merge(scope).distinct.order(:name).to_a
       @skills = (@skills << @selected_skill).compact.uniq(&:id).sort_by(&:name)
 
-      scope = scope.search(params[:q]) if params[:q].present?
-      scope = scope.with_skill(@selected_skill, has_experience: params[:experience] == "1")
-      scope = scope.where(country: params[:country]) if params[:country].present?
-      scope = scope.where(availability: params[:availability]) if AVAILABILITY_FILTERS.include?(params[:availability])
-      scope = scope.where(remote_ok: true) if params[:remote] == "1"
+      scope = Developers::DirectorySearch.call(
+        scope:,
+        query: params[:q],
+        skill: @selected_skill,
+        country: params[:country],
+        availability: params[:availability],
+        remote: params[:remote] == "1",
+        has_experience: params[:experience] == "1"
+      )
 
       @developers = paginate(scope.includes(profile_skills: :skill).order(availability: :desc, updated_at: :desc))
     end
