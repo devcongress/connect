@@ -1,19 +1,49 @@
 <% company = @company %>
 <% content_for :title, company.display_name %>
-<% content_for :description, "Jobs at #{company.display_name} on DevCongress Connect." %>
+<% content_for :description, company.tagline.presence || "Jobs at #{company.display_name} on DevCongress Connect." %>
 <% og_card OgCard::Company.new(company) %>
 <% structured_data StructuredData::Company.new(company, view: self).to_h %>
 <% location = [company.city, company.country].compact_blank.join(", ") %>
+<% links = [
+     [Phlex::TablerIcons::BrandGithub, company.github_url, "GitHub"],
+     [Phlex::TablerIcons::BrandLinkedin, company.linkedin_url, "LinkedIn"],
+     [Phlex::TablerIcons::BrandX, company.x_url, "X"]
+   ].select { |_, url, _| url.present? } %>
 
 <div class="dc-container max-w-5xl py-10">
   <section class="flex flex-col gap-5 rounded-2xl border-2 border-[#111] bg-white p-6 shadow-[8px_8px_0_#e8117f] sm:flex-row sm:items-center">
-    <%= render InitialsAvatar.new(name: company.display_name, seed: company.slug, size: :xl, shape: :square) %>
-    <div class="min-w-0">
+    <% if company.logo.attached? %>
+      <%= image_tag public_company_logo_path(slug: company.slug, v: company.logo_attachment.updated_at.to_i),
+        alt: "#{company.display_name} logo", class: "h-24 w-24 shrink-0 rounded-xl border-2 border-[#111] bg-white object-contain" %>
+    <% else %>
+      <%= render InitialsAvatar.new(name: company.display_name, seed: company.slug, size: :xl, shape: :square) %>
+    <% end %>
+    <div class="min-w-0 flex-1">
+      <% if company.organization_type_label.present? %>
+        <p class="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-[#777]"><%= company.organization_type_label %></p>
+      <% end %>
       <h1 class="dc-heading text-4xl"><%= company.display_name %></h1>
-      <p class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#555]">
+      <% if company.tagline.present? %><p class="mt-2 max-w-2xl text-lg text-[#444]"><%= company.tagline %></p><% end %>
+      <p class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#555]">
         <% if location.present? %><span class="flex items-center gap-1"><%= render Phlex::TablerIcons::MapPin.new(class: "h-4 w-4") %> <%= location %></span><% end %>
-        <% if company.website.present? %><%= link_to company.website.sub(%r{\Ahttps?://(www\.)?}, ""), company.website, target: "_blank", rel: "nofollow noopener", class: "text-[#e8117f] hover:underline" %><% end %>
+        <% if company.industry.present? %><span class="flex items-center gap-1"><%= render Phlex::TablerIcons::Building.new(class: "h-4 w-4") %> <%= company.industry %></span><% end %>
+        <% if company.founded_year.present? %><span>Founded <%= company.founded_year %></span><% end %>
       </p>
+      <% if company.website.present? || links.any? %>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <% if company.website.present? %>
+            <%= link_to company.website, target: "_blank", rel: "nofollow noopener", class: "dc-btn dc-btn-white dc-btn-sm" do %>
+              <%= render Phlex::TablerIcons::World.new(class: "h-4 w-4") %>
+              <%= company.website.sub(%r{\Ahttps?://(www\.)?}, "").delete_suffix("/") %>
+            <% end %>
+          <% end %>
+          <% links.each do |icon, url, label| %>
+            <%= link_to url, target: "_blank", rel: "nofollow noopener", aria: {label: "#{company.display_name} on #{label}"}, class: "dc-btn dc-btn-white dc-btn-sm" do %>
+              <%= render icon.new(class: "h-4 w-4") %> <%= label %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </section>
 

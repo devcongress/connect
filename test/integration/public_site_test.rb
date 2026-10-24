@@ -241,6 +241,45 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_select "nav[aria-label='Primary'] a[href='/companies']", text: "Companies", minimum: 1
   end
 
+  test "company pages show organization profile details and social links" do
+    @company.update!(
+      tagline: "Infrastructure for growing teams",
+      organization_type: "business",
+      industry: "Developer tools",
+      founded_year: 2018,
+      github_url: "https://github.com/acme",
+      linkedin_url: "https://linkedin.com/company/acme",
+      x_url: "https://x.com/acme"
+    )
+
+    get "/companies/acme-labs"
+
+    assert_response :success
+    assert_includes response.body, "Infrastructure for growing teams"
+    assert_includes response.body, "Developer tools"
+    assert_includes response.body, "Founded 2018"
+    assert_select "a[href='https://github.com/acme']", text: /GitHub/
+    assert_select "a[href='https://linkedin.com/company/acme']", text: /LinkedIn/
+    assert_select "a[href='https://x.com/acme']", text: /X/
+  end
+
+  test "company logos are shown on profiles and served from a public image endpoint" do
+    @company.logo = Rack::Test::UploadedFile.new(
+      Rails.root.join("app/assets/images/brand/devcongress-dev-square.png"), "image/png"
+    )
+    @company.save!
+
+    get "/companies/acme-labs"
+    assert_select "img[alt='Acme Labs logo'][src^='/companies/acme-labs/logo?v=']"
+
+    get "/companies/acme-labs/logo"
+    assert_response :success
+    assert_equal "image/png", response.media_type
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Cache-Control"], "max-age=31536000"
+    assert_includes response.headers["Cache-Control"], "immutable"
+  end
+
   test "the landing page only shows what the viewer can see" do
     get "/"
     assert_includes response.body, "Pat Public"
