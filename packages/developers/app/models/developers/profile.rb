@@ -107,6 +107,14 @@ class Developers::Profile < Developers::ResourceRecord
     ).distinct
   }
 
+  def self.with_skill(skill = nil, has_experience: false)
+    return all unless skill || has_experience
+
+    matching_skills = skill ? skill.profile_skills : Developers::ProfileSkill
+    matching_skills = matching_skills.joins(:experience_skills) if has_experience
+    where(id: matching_skills.select(:profile_id))
+  end
+
   # add scopes above.
 
   validates :handle, presence: true, uniqueness: true,

@@ -10,7 +10,7 @@ module Site
       @skills = (@skills << @selected_skill).compact.uniq(&:id).sort_by(&:name)
 
       scope = scope.search(params[:q]) if params[:q].present?
-      scope = scope.where(id: Developers::ProfileSkill.where(skill: @selected_skill).select(:profile_id)) if @selected_skill
+      scope = scope.with_skill(@selected_skill, has_experience: params[:experience] == "1")
       scope = scope.where(country: params[:country]) if params[:country].present?
       scope = scope.where(availability: params[:availability]) if AVAILABILITY_FILTERS.include?(params[:availability])
       scope = scope.where(remote_ok: true) if params[:remote] == "1"
