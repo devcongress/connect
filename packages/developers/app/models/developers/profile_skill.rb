@@ -14,8 +14,7 @@
 # Indexes
 #
 #  index_developers_profile_skills_on_profile_id               (profile_id)
-#  index_developers_profile_skills_on_profile_id_and_skill_id  (profile_id,skill_id) UNIQUE
-#  index_developers_profile_skills_on_skill_id                 (skill_id)
+#  index_developers_profile_skills_on_skill_id_and_profile_id  (skill_id,profile_id) UNIQUE
 #
 # Foreign Keys
 #

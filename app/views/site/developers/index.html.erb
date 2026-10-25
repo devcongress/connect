@@ -7,7 +7,7 @@
   <% canonical_page = params[:page].to_i > 1 ? {page: params[:page]} : {} %>
   <% content_for :canonical_url, technical_skill_url(@selected_skill, **canonical_page) %>
 <% end %>
-<% filtered = params.values_at(:q, :skill, :country, :availability, :remote).any?(&:present?) %>
+<% filtered = params.values_at(:q, :skill, :country, :availability, :remote, :experience).any?(&:present?) %>
 
 <section class="border-b-2 border-[#111]">
   <div class="dc-container py-16 sm:py-20">
@@ -52,7 +52,10 @@
       <%= render "site/shared/filter_select", name: :skill, label: "Skill", all: "Any skill", choices: @skills.map { [_1.name, _1.slug] } %>
       <%= render "site/shared/filter_select", name: :country, label: "Country", all: "Anywhere", choices: @countries %>
       <%= render "site/shared/filter_select", name: :availability, label: "Availability", all: "Anyone", choices: [["Open to work", "looking"], ["Open to offers", "open"]] %>
-      <div class="flex items-center gap-4 lg:pb-2">
+      <div class="flex flex-wrap items-center gap-4 lg:pb-2">
+        <label class="flex items-center gap-2 text-sm font-medium">
+          <input type="checkbox" name="experience" value="1" <%= "checked" if params[:experience] == "1" %> onchange="this.form.requestSubmit()" class="h-4 w-4 accent-[#e8117f]"> Has experience
+        </label>
         <label class="flex items-center gap-2 text-sm font-medium">
           <input type="checkbox" name="remote" value="1" <%= "checked" if params[:remote] == "1" %> onchange="this.form.requestSubmit()" class="h-4 w-4 accent-[#e8117f]"> Remote OK
         </label>
