@@ -81,10 +81,20 @@ class SeoTest < ActionDispatch::IntegrationTest
   end
 
   test "company pages get an Organization" do
+    @company.update!(
+      tagline: "Infrastructure for growing teams",
+      industry: "Developer tools",
+      founded_year: 2018,
+      github_url: "https://github.com/acme",
+      x_url: "https://x.com/acme"
+    )
     get "/companies/#{@company.slug}"
 
     assert_select "meta[property='og:image'][content^='http://www.example.com/og/companies/#{@company.slug}.png?v=']"
-    assert_equal ["Organization", "Acme Labs"], json_ld.values_at("@type", "name")
+    data = json_ld
+    assert_equal ["Organization", "Acme Labs", "Infrastructure for growing teams", "Developer tools", "2018"],
+      data.values_at("@type", "name", "slogan", "industry", "foundingDate")
+    assert_equal ["https://github.com/acme", "https://x.com/acme"], data["sameAs"]
   end
 
   test "public projects get a CreativeWork crediting the owner" do

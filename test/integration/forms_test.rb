@@ -44,12 +44,44 @@ class FormsTest < ActionDispatch::IntegrationTest
     login_user(@user)
     get "/company/acme-labs/company/edit"
     assert_response :success
-    %w[name website description country city].each do |attribute|
+    %w[name logo tagline organization_type industry founded_year website github_url linkedin_url x_url description country city].each do |attribute|
       assert_select "[name='company[#{attribute}]']"
     end
 
-    patch "/company/acme-labs/company", params: {company: {website: "https://acme.example", country: "Kenya", city: "Nairobi"}}
-    assert_equal ["https://acme.example", "Kenya", "Nairobi"], @company.reload.slice(:website, :country, :city).values
+    patch "/company/acme-labs/company", params: {company: {
+      tagline: "Tools for teams across Africa",
+      organization_type: "business",
+      industry: "Developer tools",
+      founded_year: "2018",
+      website: "https://acme.example",
+      github_url: "https://github.com/acme",
+      linkedin_url: "https://linkedin.com/company/acme",
+      x_url: "https://x.com/acme",
+      country: "Kenya",
+      city: "Nairobi"
+    }}
+    assert_equal(
+      ["Tools for teams across Africa", "business", "Developer tools", 2018, "https://acme.example",
+        "https://github.com/acme", "https://linkedin.com/company/acme", "https://x.com/acme", "Kenya", "Nairobi"],
+      @company.reload.slice(:tagline, :organization_type, :industry, :founded_year, :website, :github_url,
+        :linkedin_url, :x_url, :country, :city).values
+    )
+
+    get "/company/acme-labs/company"
+    assert_includes response.body, "2018"
+    refute_includes response.body, "2,018"
+  end
+
+  test "organization profile fields stay out of personal posting spaces" do
+    personal = Company.personal_for!(@user)
+    login_user(@user)
+
+    get "/company/#{personal.slug}/company/edit"
+
+    assert_response :success
+    %w[logo tagline organization_type industry founded_year github_url linkedin_url x_url].each do |attribute|
+      assert_select "[name='company[#{attribute}]']", count: 0
+    end
   end
 
   test "the job form picks the currency from a list and labels the pay range" do

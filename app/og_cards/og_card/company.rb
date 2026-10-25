@@ -8,7 +8,7 @@ module OgCard
 
     def title = @company.display_name
 
-    def subtitle = [@company.city, @company.country].compact_blank.join(", ").presence
+    def subtitle = @company.tagline.presence || [@company.city, @company.country].compact_blank.join(", ").presence
 
     def footer
       count = open_roles
