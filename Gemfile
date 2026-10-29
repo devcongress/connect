@@ -68,7 +68,7 @@ end
 
 gem "plutonium"
 
-gem "annotated", "~> 0.1.1", group: :development
+gem "annotated", "~> 0.1.4", group: :development
 
 gem "standard", ">= 1.35.1", group: :development
 
