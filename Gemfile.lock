@@ -505,7 +505,6 @@ GEM
     resend (1.17.0)
       base64
       httparty (>= 0.22.0)
-    rexml (3.4.4)
     roda (3.108.0)
       rack
     rodauth (2.48.0)
@@ -551,10 +550,9 @@ GEM
       logger
     rubyzip (3.7.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.49.0)
+    selenium-webdriver (4.52.0)
       base64 (~> 0.2)
       logger (~> 1.4)
-      rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
     semantic_range (3.1.1)
@@ -895,7 +893,6 @@ CHECKSUMS
   reline (0.7.0) sha256=5b012d8e55dbf9d450f12bde2cf7d15ff546ae80b3f8f3b30e570d431815583d
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
   resend (1.17.0) sha256=027806958c1ff29ae6b37d66e16e20441bf06607d1718aefbb412e634d5b74c9
-  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   roda (3.108.0) sha256=a209acc5c885c7c9cfe703ad985b343026f79f67949932dd739b83e5a129ffbd
   rodauth (2.48.0) sha256=14ceb4d48b2c224f9dfe3cfe36b29f4a34c95215c1ea204400f48ee6a39d3c3a
   rodauth-model (0.5.0) sha256=005cd65498c9895ff3c10a44957448ae56d13aea166b5f2b3244062c21094c02
@@ -912,7 +909,7 @@ CHECKSUMS
   ruby-vips (2.3.0) sha256=e685ec02c13969912debbd98019e50492e12989282da5f37d05f5471442f5374
   rubyzip (3.7.0) sha256=65c19294da75297a939006f3516deacc33185fbd721ff1954f7a231db6d3e121
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  selenium-webdriver (4.49.0) sha256=b430f091a3cababb356b6f6132e0e4f385b017819355f563557e1537819edc89
+  selenium-webdriver (4.52.0) sha256=5d45ba100ea8b57f5a8c25979a636d48b4c60c39973478930d78e884bdeecd2d
   semantic_range (3.1.1) sha256=508333196ef0c7ba33e79579d4df7eb0a41080595e6a655c2515b03d634ec4a9
   sequel (5.108.0) sha256=ae5996d1196775427916a2fa36e02f99762ead9affb8ea9b1aec2c0b16bdb3a3
   sequel-activerecord_connection (2.0.1) sha256=8a13dc466520788459af18bb267f5e57d37b8764daaa3f6e8bc2932ce2642e15
