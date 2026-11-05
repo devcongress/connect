@@ -521,7 +521,7 @@ GEM
       roda (~> 3.76)
       rodauth (~> 2.36)
       rodauth-model (~> 0.2)
-    rotp (6.3.0)
+    rotp (6.4.0)
     rqrcode (3.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
@@ -711,7 +711,7 @@ DEPENDENCIES
   resend (~> 1.3)
   rodauth-omniauth (~> 0.6.2)
   rodauth-rails (~> 2.2)
-  rotp (~> 6.3)
+  rotp (~> 6.4)
   rqrcode (~> 3.2)
   selenium-webdriver
   sequel-activerecord_connection (~> 2.0)
@@ -901,7 +901,7 @@ CHECKSUMS
   rodauth-model (0.5.0) sha256=005cd65498c9895ff3c10a44957448ae56d13aea166b5f2b3244062c21094c02
   rodauth-omniauth (0.6.2) sha256=8407f9bc5179822e980361239ca1a72c0b6fde66b204017f3954cf3e273574ab
   rodauth-rails (2.2.2) sha256=73f66ea3fabebfdbcb99e2e373d6919a3f9d9902661ff4f900e1a7d10a3160e6
-  rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
+  rotp (6.4.0) sha256=e2de8e0dfda5729b430f384e6233432bf0402c4f57ca270fa0cc1b5a42ed49f2
   rqrcode (3.2.0) sha256=64c1494ca6bb67d731330f38b50e3fd09eeab4f5dcd04b608e21218d1d0b9542
   rqrcode_core (2.1.0) sha256=f303b85df89c1b8fc5ee8dc19808c9dc4330e6329b660d99d4a8cbb36ca13051
   rubocop (1.88.2) sha256=8def251c90cd955feb4daa3edc0ab56893250c4ce90ef81e6c80c03f9a939bbf

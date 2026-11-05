@@ -95,7 +95,7 @@ gem "tilt", "~> 2.9"
 
 gem "rodauth-rails", "~> 2.2"
 
-gem "rotp", "~> 6.3"
+gem "rotp", "~> 6.4"
 
 gem "rqrcode", "~> 3.2"
 
