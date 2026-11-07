@@ -14,7 +14,8 @@ class CompanyPortal::CompanyPolicy < ::CompanyPolicy
     attributes = [:name, :website, :description, :country, :city]
     return attributes if record.personal?
 
-    attributes + [:logo, :tagline, :organization_type, :industry, :founded_year, :github_url, :linkedin_url, :x_url]
+    attributes + [:logo, :tagline, :organization_type, :industry, :founded_year, :technologies,
+      :github_url, :linkedin_url, :x_url]
   end
 
   def permitted_attributes_for_update

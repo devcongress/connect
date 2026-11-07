@@ -60,6 +60,8 @@ class Company < ::ResourceRecord
   # add has_one associations above.
   has_many :company_users, dependent: :destroy
   has_many :users, through: :company_users
+  has_many :company_technologies, dependent: :delete_all
+  has_many :technologies, through: :company_technologies, source: :skill
   has_many :job_posts, class_name: "Hiring::JobPost", dependent: :destroy
   has_many :company_user_invites, class_name: "Invites::CompanyUserInvite", dependent: :destroy
 
