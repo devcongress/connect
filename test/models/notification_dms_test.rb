@@ -38,10 +38,10 @@ class NotificationDmsTest < ActiveJob::TestCase
     changed = Hiring::ApplicationStatusChangedDm.new(job_application: application, message: "Free Tuesday?")
     assert_equal @kofi.user, changed.recipient
     assert_equal "You're on the shortlist for Rails Engineer", changed.text
-    assert(changed.blocks.any? { _1.dig(:text, :text)&.include?("> Free Tuesday?") })
+    assert(changed.blocks.any? { it.dig(:text, :text)&.include?("> Free Tuesday?") })
 
     multi = Hiring::ApplicationStatusChangedDm.new(job_application: application, message: "Line one\nLine two")
-    assert(multi.blocks.any? { _1.dig(:text, :text)&.include?("> Line one\n> Line two") })
+    assert(multi.blocks.any? { it.dig(:text, :text)&.include?("> Line one\n> Line two") })
 
     application.update!(status: :rejected)
     rejected = Hiring::ApplicationStatusChangedDm.new(job_application: application, message: nil)

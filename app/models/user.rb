@@ -69,7 +69,7 @@ class User < ResourceRecord
   def update_opt_outs!(categories, via:)
     transaction do
       notification_opt_outs.where(channel: via.to_s).where.not(category: categories).delete_all
-      categories.each { opt_out!(_1, via:) }
+      categories.each { opt_out!(it, via:) }
     end
     notification_opt_outs.reset
   end
@@ -80,7 +80,7 @@ class User < ResourceRecord
 
   # Slack DMs take over from email. People can turn email back on per category.
   def slack_connected!
-    NotificationOptOut::CATEGORIES.each_key { opt_out!(_1, via: :email) }
+    NotificationOptOut::CATEGORIES.each_key { opt_out!(it, via: :email) }
   end
 
   # Email comes back for every category still on in Slack, so nobody stops
@@ -88,7 +88,7 @@ class User < ResourceRecord
   def disconnect_slack!
     transaction do
       slack_identity.destroy!
-      still_on = NotificationOptOut::CATEGORIES.keys.select { wants_notification?(_1, via: :slack) }
+      still_on = NotificationOptOut::CATEGORIES.keys.select { wants_notification?(it, via: :slack) }
       notification_opt_outs.where(channel: "email", category: still_on).delete_all
     end
   end
