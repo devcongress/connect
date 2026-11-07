@@ -258,6 +258,8 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
   end
 
   test "company pages show organization profile details and social links" do
+    ruby = Skill.find_or_create_by!(name: "Ruby")
+    postgresql = Skill.find_or_create_by!(name: "PostgreSQL")
     @company.update!(
       tagline: "Infrastructure for growing teams",
       organization_type: "business",
@@ -267,6 +269,7 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
       linkedin_url: "https://linkedin.com/company/acme",
       x_url: "https://x.com/acme"
     )
+    @company.technologies = [ruby, postgresql]
 
     get "/companies/acme-labs"
 
@@ -277,6 +280,11 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_select "a[href='https://github.com/acme']", text: /GitHub/
     assert_select "a[href='https://linkedin.com/company/acme']", text: /LinkedIn/
     assert_select "a[href='https://x.com/acme']", text: /X/
+    assert_select "h2", text: "Technologies"
+    assert_select "ul[aria-label='Technologies used by Acme Labs']" do
+      assert_select "a[href='/technical-skills/postgresql']", text: "PostgreSQL"
+      assert_select "a[href='/technical-skills/ruby']", text: "Ruby"
+    end
   end
 
   test "company logos are shown on profiles and served from a public image endpoint" do

@@ -12,6 +12,7 @@ module StructuredData
         "slogan" => company.tagline,
         "industry" => company.industry,
         "foundingDate" => company.founded_year&.to_s,
+        "knowsAbout" => company.technologies.order(:name).pluck(:name),
         "address" => address(city: company.city, country: company.country),
         "logo" => logo_url(company),
         "sameAs" => links.presence
