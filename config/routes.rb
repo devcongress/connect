@@ -34,6 +34,8 @@ Rails.application.routes.draw do
     get "companies", to: "companies#index", as: :public_companies
     get "companies/:slug/logo", to: "company_logos#show", as: :public_company_logo
     get "companies/:slug", to: "companies#show", as: :public_company
+    post "companies/:slug/follow", to: "company_follows#create", as: :follow_company
+    delete "companies/:slug/follow", to: "company_follows#destroy"
     get "projects", to: "projects#index", as: :public_projects
     get "projects/:slug", to: "projects#show", as: :public_project
 

@@ -84,6 +84,9 @@ class Developers::Profile < Developers::ResourceRecord
   has_many :incoming_follows, class_name: "Network::Follow", foreign_key: :followee_id, inverse_of: :followee, dependent: :delete_all
   has_many :following, through: :outgoing_follows, source: :followee
   has_many :followers, through: :incoming_follows, source: :follower
+  has_many :company_follows, class_name: "Network::CompanyFollow", foreign_key: :follower_id,
+    inverse_of: :follower, dependent: :delete_all
+  has_many :followed_companies, through: :company_follows, source: :company
   has_many :given_endorsements, class_name: "Network::Endorsement", foreign_key: :endorser_id, inverse_of: :endorser, dependent: :destroy
 
   # Showcase: projects they own, and their credits on other people's projects.
@@ -191,6 +194,10 @@ class Developers::Profile < Developers::ResourceRecord
 
   def followed_by?(other)
     other.present? && incoming_follows.exists?(follower_id: other.id)
+  end
+
+  def following_company?(company)
+    company.present? && company_follows.exists?(company_id: company.id)
   end
 
   # Followers this profile hasn't followed back yet.

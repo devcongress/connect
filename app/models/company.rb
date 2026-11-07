@@ -62,6 +62,8 @@ class Company < ::ResourceRecord
   has_many :users, through: :company_users
   has_many :job_posts, class_name: "Hiring::JobPost", dependent: :destroy
   has_many :company_user_invites, class_name: "Invites::CompanyUserInvite", dependent: :destroy
+  has_many :company_follows, class_name: "Network::CompanyFollow", inverse_of: :company, dependent: :delete_all
+  has_many :followers, through: :company_follows, source: :follower
 
   # add has_many associations above.
 

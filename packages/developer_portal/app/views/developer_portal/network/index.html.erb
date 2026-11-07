@@ -3,12 +3,14 @@
      ["connections", "Connections", @counts["connections"]],
      ["followers", "Followers", @counts["followers"]],
      ["following", "Following", @counts["following"]],
+     ["companies", "Companies", @counts["companies"]],
      ["suggestions", "People you may know", nil]
    ] %>
 <% empty = {
      "connections" => "No connections yet. When you and someone else follow each other, you're connected.",
      "followers" => "Nobody follows you yet. Share your profile page to get started.",
      "following" => "You're not following anyone yet. Find people in the developer directory.",
+     "companies" => "You're not following any companies yet. Browse companies to find teams you want to keep up with.",
      "suggestions" => "No suggestions yet. Add skills to your profile and follow a few people, and we'll suggest more."
    } %>
 
@@ -16,11 +18,16 @@
   <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div>
       <h1 class="font-display text-3xl text-[var(--pu-text)]">Network</h1>
-      <p class="text-sm text-[var(--pu-text-muted)]">Follow people to keep up with them. When you follow each other you're connected: connections can endorse your skills and see contact details you share with them.</p>
+      <p class="text-sm text-[var(--pu-text-muted)]">Follow people and companies to keep up with them. When two people follow each other they're connected: connections can endorse skills and see contact details shared with them.</p>
     </div>
-    <a href="<%= main_app.developers_directory_path %>" class="pu-btn pu-btn-md pu-btn-outline shrink-0">
-      <%= render Phlex::TablerIcons::Search.new(class: "mr-1 h-4 w-4") %> Find developers
-    </a>
+    <div class="flex flex-wrap gap-2">
+      <a href="<%= main_app.developers_directory_path %>" class="pu-btn pu-btn-md pu-btn-outline shrink-0">
+        <%= render Phlex::TablerIcons::Search.new(class: "mr-1 h-4 w-4") %> Find developers
+      </a>
+      <a href="<%= main_app.public_companies_path %>" class="pu-btn pu-btn-md pu-btn-outline shrink-0">
+        <%= render Phlex::TablerIcons::Building.new(class: "mr-1 h-4 w-4") %> Browse companies
+      </a>
+    </div>
   </div>
 
   <nav class="flex gap-1 overflow-x-auto border-b border-[var(--pu-border)]" aria-label="Network">
@@ -35,7 +42,26 @@
     <% end %>
   </nav>
 
-  <% if @people.any? %>
+  <% if @tab == "companies" && @companies.any? %>
+    <ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <% @companies.each do |company| %>
+        <li class="pu-card">
+          <div class="pu-card-body flex items-start gap-4">
+            <%= render InitialsAvatar.new(name: company.display_name, seed: company.slug, size: :md, shape: :square) %>
+            <div class="min-w-0 flex-1">
+              <a href="<%= main_app.public_company_path(slug: company.slug) %>" class="block truncate font-semibold text-[var(--pu-text)] hover:text-primary-600 dark:hover:text-primary-400"><%= company.display_name %></a>
+              <% if company.tagline.present? %><p class="line-clamp-2 text-sm text-[var(--pu-text-muted)]"><%= company.tagline %></p><% end %>
+              <% location = [company.city, company.country].compact_blank.join(", ") %>
+              <% if location.present? %><p class="mt-1 truncate text-xs text-[var(--pu-text-subtle)]"><%= location %></p><% end %>
+            </div>
+            <div class="shrink-0">
+              <%= render "shared/company_follow_button", company:, following: true, variant: :portal, size: :sm %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% elsif @tab != "companies" && @people.any? %>
     <ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <% @people.each do |person| %>
         <li class="pu-card">
