@@ -31,7 +31,7 @@ module Slack
       "https://devcongress-community.slack.com/archives/#{channel}/p#{ts.delete(".")}"
     end
 
-    def calls_to(method) = calls.select { _1.method == method }
+    def calls_to(method) = calls.select { it.method == method }
 
     private
 
