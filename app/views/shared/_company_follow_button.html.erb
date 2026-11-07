@@ -1,0 +1,22 @@
+<%# Follow / Following for a company.
+    Locals: company, following, variant: :site or :portal, size: :md or :sm. %>
+<% variant = local_assigns.fetch(:variant, :site) %>
+<% size = local_assigns.fetch(:size, :md) %>
+<% path = main_app.follow_company_path(slug: company.slug) %>
+<% classes = if variant == :portal
+     ["pu-btn", (size == :sm) ? "pu-btn-sm" : "pu-btn-md", following ? "pu-btn-outline" : "pu-btn-primary"]
+   else
+     ["dc-btn dc-btn-sm", ("px-3 py-1.5 text-xs" if size == :sm), following ? "dc-btn-white" : "dc-btn-primary"]
+   end %>
+<% if following %>
+  <%= button_to path, method: :delete, class: class_names(classes, "group"), form: {class: "inline"}, title: "Unfollow #{company.display_name}" do %>
+    <%= render Phlex::TablerIcons::Check.new(class: "h-4 w-4") %>
+    <span class="group-hover:hidden group-focus-visible:hidden">Following</span>
+    <span class="hidden group-hover:inline group-focus-visible:inline">Unfollow</span>
+  <% end %>
+<% else %>
+  <%= button_to path, method: :post, class: classes, form: {class: "inline"} do %>
+    <%= render Phlex::TablerIcons::Building.new(class: "h-4 w-4") %>
+    <span>Follow</span>
+  <% end %>
+<% end %>

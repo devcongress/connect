@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_24_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_07_150000) do
   create_table "active_shrine_attachments", force: :cascade do |t|
     t.string "record_type"
     t.bigint "record_id"
@@ -281,6 +281,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_110000) do
     t.index ["published_at", "expires_at"], name: "index_hiring_job_posts_on_published_at_and_expires_at"
   end
 
+  create_table "network_company_follows", force: :cascade do |t|
+    t.integer "follower_id", null: false
+    t.integer "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_network_company_follows_on_company_id"
+    t.index ["follower_id", "company_id"], name: "index_network_company_follows_on_follower_id_and_company_id", unique: true
+    t.index ["follower_id"], name: "index_network_company_follows_on_follower_id"
+  end
+
   create_table "network_endorsements", force: :cascade do |t|
     t.integer "endorser_id", null: false
     t.integer "profile_skill_id", null: false
@@ -432,6 +442,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_24_110000) do
   add_foreign_key "hiring_job_applications", "developers_profiles", column: "profile_id"
   add_foreign_key "hiring_job_applications", "hiring_job_posts", column: "job_post_id"
   add_foreign_key "hiring_job_posts", "companies"
+  add_foreign_key "network_company_follows", "companies", on_delete: :cascade
+  add_foreign_key "network_company_follows", "developers_profiles", column: "follower_id", on_delete: :cascade
   add_foreign_key "network_endorsements", "developers_profile_skills", column: "profile_skill_id", on_delete: :cascade
   add_foreign_key "network_endorsements", "developers_profiles", column: "endorser_id", on_delete: :cascade
   add_foreign_key "network_follows", "developers_profiles", column: "followee_id", on_delete: :cascade

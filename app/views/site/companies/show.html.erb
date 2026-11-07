@@ -22,12 +22,23 @@
       <% if company.organization_type_label.present? %>
         <p class="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-[#777]"><%= company.organization_type_label %></p>
       <% end %>
-      <h1 class="dc-heading text-4xl"><%= company.display_name %></h1>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <h1 class="dc-heading text-4xl"><%= company.display_name %></h1>
+        <% if @viewer_profile %>
+          <%= render "shared/company_follow_button", company:, following: @following %>
+        <% else %>
+          <%= link_to (current_user ? new_developer_profile_path : rodauth(:user).login_path), class: "dc-btn dc-btn-primary dc-btn-sm",
+                title: (current_user ? "Create a developer profile to follow companies" : "Log in to follow companies") do %>
+            <%= render Phlex::TablerIcons::Building.new(class: "h-4 w-4") %> Follow
+          <% end %>
+        <% end %>
+      </div>
       <% if company.tagline.present? %><p class="mt-2 max-w-2xl text-lg text-[#444]"><%= company.tagline %></p><% end %>
       <p class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[#555]">
         <% if location.present? %><span class="flex items-center gap-1"><%= render Phlex::TablerIcons::MapPin.new(class: "h-4 w-4") %> <%= location %></span><% end %>
         <% if company.industry.present? %><span class="flex items-center gap-1"><%= render Phlex::TablerIcons::Building.new(class: "h-4 w-4") %> <%= company.industry %></span><% end %>
         <% if company.founded_year.present? %><span>Founded <%= company.founded_year %></span><% end %>
+        <span><strong><%= @followers_count %></strong> <%= "follower".pluralize(@followers_count) %></span>
       </p>
       <% if company.website.present? || links.any? %>
         <div class="mt-4 flex flex-wrap gap-2">
