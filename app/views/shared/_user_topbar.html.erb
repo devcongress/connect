@@ -1,6 +1,15 @@
 <%# Topbar shared by the dashboard, developer and company portals. %>
 <%= render Plutonium::UI::Layout::Topbar.new do |bar| %>
   <% bar.with_breadcrumbs do %>
+    <span class="mr-2 flex items-center lg:hidden">
+      <%= link_to public_home_path,
+        aria: {label: "DevCongress Connect home"},
+        class: "flex shrink-0 items-center gap-1.5 rounded-[var(--pu-radius-md)] px-1.5 py-1 text-sm font-semibold text-[var(--pu-text)] hover:bg-[var(--pu-surface-alt)]" do %>
+        <%= image_tag "brand/devcongress-dev-square.png", alt: "", class: "h-7 w-7 rounded-sm" %>
+        <span class="hidden sm:inline">Connect</span>
+      <% end %>
+      <span class="ml-2 text-[var(--pu-text-subtle)]" aria-hidden="true">/</span>
+    </span>
     <%= render ContextSwitcher.new(user: current_user, current: context) %>
   <% end %>
 
@@ -16,7 +25,7 @@
         record: current_user
       ) do |nav|
         nav.with_section do |section|
-          section.with_link(label: "Home", href: home_dashboard_path) do |link|
+          section.with_link(label: "Dashboard", href: home_dashboard_path) do |link|
             link.with_leading { render Phlex::TablerIcons::Home.new(class: "mr-2 text-[var(--pu-text-subtle)] w-4 h-4") }
           end
           section.with_link(label: "Change password", href: rodauth(:user).change_password_path) do |link|

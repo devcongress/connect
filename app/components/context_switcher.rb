@@ -24,7 +24,7 @@ class ContextSwitcher < Plutonium::UI::Component::Base
                "bg-[var(--pu-surface-raised)] py-1",
         style: "box-shadow: var(--pu-shadow-lg)"
       ) do
-        item(label: "Home", sublabel: @user.email, href: home_path, active: @current.nil?) do
+        item(label: "Dashboard", sublabel: @user.email, href: dashboard_path, active: @current.nil?) do
           span(class: "inline-flex h-8 w-8 items-center justify-center rounded-full bg-[var(--pu-surface-alt)]") do
             render Phlex::TablerIcons::Home.new(class: "h-4 w-4 text-[var(--pu-text-muted)]")
           end
@@ -63,7 +63,7 @@ class ContextSwitcher < Plutonium::UI::Component::Base
       span(class: "hidden sm:inline truncate max-w-[12rem]") { @current.name }
     else
       render Phlex::TablerIcons::Home.new(class: "h-4 w-4 text-[var(--pu-text-muted)]")
-      span(class: "hidden sm:inline") { "Home" }
+      span(class: "hidden sm:inline") { "Dashboard" }
     end
   end
 
@@ -98,7 +98,7 @@ class ContextSwitcher < Plutonium::UI::Component::Base
     end
   end
 
-  def home_path
+  def dashboard_path
     home_dashboard_path
   end
 end
