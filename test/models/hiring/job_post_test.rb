@@ -3,7 +3,7 @@ require "test_helper"
 class Hiring::JobPostTest < ActiveSupport::TestCase
   include AccountsTestHelper
 
-  setup { @company = create_company!.tap { _1.update!(jobs_trusted_at: Time.current) } }
+  setup { @company = create_company!.tap { it.update!(jobs_trusted_at: Time.current) } }
 
   test "moves through draft, active, expired, filled and archived" do
     job = create_job!(company: @company, published: false)

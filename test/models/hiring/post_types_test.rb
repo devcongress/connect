@@ -38,7 +38,7 @@ class Hiring::PostTypesTest < ActiveSupport::TestCase
   end
 
   test "posts group into jobs, gigs and internships" do
-    trusted = @company.tap { _1.update!(jobs_trusted_at: Time.current) }
+    trusted = @company.tap { it.update!(jobs_trusted_at: Time.current) }
     job = create_job!(company: trusted, title: "Engineer")
     gig = create_job!(company: trusted, title: "Logo", employment_type: :freelance)
     intern = create_job!(company: trusted, title: "Intern", employment_type: :internship)
