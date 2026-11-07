@@ -10,6 +10,20 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", /Africa.s builders/
   end
 
+  test "developer count includes every profile for guests and members" do
+    create_profile!(visibility: :everyone)
+    create_profile!(visibility: :members)
+    create_profile!(visibility: :hidden)
+    total = Developers::Profile.count
+
+    get root_path
+    assert_developer_count total
+
+    login_user(create_user!)
+    get root_path
+    assert_developer_count total
+  end
+
   test "builder sections share one public rotation without duplicates" do
     skill = Skill.create!(name: "Ruby")
     public_profiles = 6.times.map do |index|
@@ -50,5 +64,11 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     public_projects.each do |project|
       assert_select "a[href=?]", public_project_path(project.slug), count: 1
     end
+  end
+
+  private
+
+  def assert_developer_count(count)
+    assert_select "li", text: /\A\s*#{count}\s+Developers listed\b/m, count: 1
   end
 end
