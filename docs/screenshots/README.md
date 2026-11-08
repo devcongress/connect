@@ -26,3 +26,6 @@ their env vars were set; no Slack messages were sent.
 | 18-network | Developer portal network page, "People you may know" |
 | 19-credits | Credits: projects you've been added to, to confirm or decline |
 | 20-experience-description-checklist | New experience form with description guidance and a private self-review checklist |
+| 21-company-following | Public company page with follower count and the signed-in developer's follow state |
+| 22-company-unfollow-state | Public company page with the focused follow control offering to unfollow |
+| 23-network-followed-companies | Developer network page listing followed companies |

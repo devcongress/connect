@@ -25,6 +25,9 @@ module Site
       end
 
       @jobs = Hiring::JobPost.visible_to(current_user).where(company: @company).newest
+      @viewer_profile = current_user&.developer_profile
+      @following = @viewer_profile&.following_company?(@company) || false
+      @followers_count = @company.company_follows.count
       @technologies = @company.technologies.order(:name)
     end
   end

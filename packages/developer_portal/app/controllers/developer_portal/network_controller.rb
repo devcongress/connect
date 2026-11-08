@@ -1,9 +1,9 @@
 module DeveloperPortal
-  # The viewer's network: connections, followers, people they follow and
-  # people they may know. Following and unfollowing go through the public
-  # FollowsController so the buttons work the same everywhere.
+  # The viewer's network: connections, followers, people and companies they
+  # follow, and people they may know. Follow actions use the public controllers
+  # so the buttons work the same everywhere.
   class NetworkController < PlutoniumController
-    TABS = %w[connections followers following suggestions].freeze
+    TABS = %w[connections followers following companies suggestions].freeze
 
     def index
       @profile = current_scoped_entity
@@ -11,8 +11,14 @@ module DeveloperPortal
       @counts = {
         "connections" => @profile.connections.count,
         "followers" => @profile.followers.count,
-        "following" => @profile.following.count
+        "following" => @profile.following.count,
+        "companies" => @profile.followed_companies.count
       }
+      if @tab == "companies"
+        @companies = @profile.followed_companies.merge(::Network::CompanyFollow.newest).to_a
+        return
+      end
+
       @people =
         case @tab
         when "connections" then @profile.connections.order(:name)
