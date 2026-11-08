@@ -1,5 +1,13 @@
 module Developers
   class ProfileDefinition < Developers::ResourceDefinition
+    class Display < Plutonium::UI::Display::Resource
+      private
+
+      def display_class
+        [super, "developer-profile-display"].filter_map(&:presence).join(" ")
+      end
+    end
+
     show_page_title "Profile"
     edit_page_title "Edit profile"
     modal false

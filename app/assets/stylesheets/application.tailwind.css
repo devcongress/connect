@@ -150,6 +150,66 @@ body {
   font-family: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
+/* The developer profile is a dense reference view, but it should still read
+   like the quieter dashboard cards around it. Keep this scoped to the profile
+   display so other resource pages retain Plutonium's default hierarchy. */
+.developer-profile-display {
+  font-family: "Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.developer-profile-display #details-tabpanel .pu-card > :first-child {
+  padding: 1.25rem 1.5rem 0;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.developer-profile-display #details-tabpanel .pu-card > :first-child > span:first-child {
+  display: none;
+}
+
+.developer-profile-display #details-tabpanel .pu-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  letter-spacing: normal;
+}
+
+.developer-profile-display #details-tabpanel .pu-card > .p-6 {
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.developer-profile-display #details-tabpanel .label {
+  margin-bottom: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.developer-profile-display #details-tabpanel .value.text-lg,
+.developer-profile-display #details-tabpanel .placeholder.text-lg {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.developer-profile-display #details-tabpanel .placeholder {
+  font-style: normal;
+}
+
+.developer-profile-display :is(#experience-tabpanel, #skills-tabpanel) turbo-frame h1 {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  letter-spacing: normal;
+}
+
+.developer-profile-display :is(#experience-tabpanel, #skills-tabpanel) turbo-frame h1 + p {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
 /* Pill buttons, like devcongress.org. */
 .pu-btn {
   border-radius: 9999px;
