@@ -18,6 +18,10 @@ class DeveloperPortalTest < ActionDispatch::IntegrationTest
 
     get "/developer/ada/developers_profile"
     assert_response :success
+    assert_select ".developer-profile-display" do
+      assert_select "h3", text: "About"
+      assert_select "#developers_profile_#{@profile.id}_name_label", text: "Name"
+    end
 
     get "/developer/ada/developers_profile/edit"
     assert_response :success
