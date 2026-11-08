@@ -39,6 +39,8 @@ class Skill < ::ResourceRecord
 
   has_many :profile_skills, class_name: "Developers::ProfileSkill", dependent: :restrict_with_error
   has_many :project_skills, class_name: "Showcase::ProjectSkill", dependent: :restrict_with_error
+  has_many :company_technologies, dependent: :restrict_with_error
+  has_many :companies, through: :company_technologies
   # add has_many associations above.
 
   # add attachments above.

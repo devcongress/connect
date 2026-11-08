@@ -42,9 +42,22 @@ class PortalAccessTest < ActionDispatch::IntegrationTest
     get "/developer/#{@profile.to_param}"
 
     assert_select "details summary[aria-label='Switch context']"
+    assert_select "details a[href='/dashboard/']", text: /Dashboard/
     assert_select "details a[href='/developer/#{@profile.handle}']"
     assert_select "details a[href='/company/acme-labs']"
     assert_select "details a[href='/company/#{@other_company.to_param}']", count: 0
+  end
+
+  test "portal navigation distinguishes the public site from the dashboard" do
+    login_user(@user)
+
+    ["/dashboard", "/developer/#{@profile.to_param}", "/company/#{@company.to_param}"].each do |path|
+      get path
+
+      assert_select "aside#sidebar-navigation a[aria-label='DevCongress Connect home'][href='/']"
+      assert_select "nav.pu-topbar a[aria-label='DevCongress Connect home'][href='/']"
+      assert_select "a[href='/dashboard/']", text: /Dashboard/
+    end
   end
 
   test "users can open companies they belong to, and no others" do

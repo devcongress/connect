@@ -1,4 +1,4 @@
-<% page_title = @selected_skill ? "#{@selected_skill.name} developers" : "Developers" %>
+<% page_title = @selected_skill ? "#{@selected_skill.name} developers and companies" : "Developers" %>
 <% page_description = @selected_skill&.canonical_description || "Browse developers in the DevCongress community: skills, experience and availability." %>
 <% content_for :title, page_title %>
 <% content_for :description, page_description %>
@@ -13,7 +13,7 @@
   <div class="dc-container py-16 sm:py-20">
     <% if @selected_skill %>
       <p class="dc-eyebrow">Technical skill<%= " · #{@selected_skill.category}" if @selected_skill.category.present? %></p>
-      <h1 class="dc-heading text-[clamp(2.5rem,6vw,4rem)]"><%= @selected_skill.name %> developers</h1>
+      <h1 class="dc-heading text-[clamp(2.5rem,6vw,4rem)]"><%= @selected_skill.name %></h1>
       <p class="mt-4 max-w-3xl text-lg leading-8 text-[#444]"><%= @selected_skill.canonical_description %></p>
       <p class="mt-3 max-w-3xl leading-7 text-[#555]">
         <%= @selected_skill.canonical_why_description %>
@@ -34,7 +34,7 @@
         </div>
       <% end %>
       <p class="mt-3 max-w-3xl text-sm text-[#666]">
-        <%= current_user ? "Browse members who list #{@selected_skill.name} among their skills." : "Browse public profiles that list #{@selected_skill.name}. Sign in to see members-only profiles too." %>
+        <%= current_user ? "Explore members who list #{@selected_skill.name} and companies using it." : "Explore public profiles that list #{@selected_skill.name} and companies using it. Sign in to see members-only profiles too." %>
       </p>
     <% else %>
       <p class="dc-eyebrow">The community</p>
@@ -66,22 +66,52 @@
 </section>
 
 <section class="dc-container py-12">
-  <div class="mb-6 flex items-center justify-between gap-4 text-sm text-[#555]">
-    <p><%= pluralize(@total, "developer") %><%= " match" if filtered %></p>
-    <% if filtered %><%= link_to "Clear filters", developers_directory_path, class: "dc-link" %><% end %>
-  </div>
+  <% if @selected_skill %>
+    <% developers_tab_path = technical_skill_path(@selected_skill, **request.query_parameters.except("tab", "page")) %>
+    <% companies_tab_path = technical_skill_path(@selected_skill, **request.query_parameters.except("page").merge("tab" => "companies")) %>
+    <div class="dc-tabs-row mb-8">
+      <nav class="dc-tabs" role="tablist" aria-label="<%= @selected_skill.name %> results">
+        <%= link_to developers_tab_path, class: "dc-tab", role: "tab", aria: {selected: @results_tab == :developers, current: ("page" if @results_tab == :developers), controls: "developers-results"} do %>
+          Developers <span class="dc-tab-count"><%= @total %></span>
+        <% end %>
+        <%= link_to companies_tab_path, class: "dc-tab", role: "tab", aria: {selected: @results_tab == :companies, current: ("page" if @results_tab == :companies), controls: "companies-results"} do %>
+          Companies <span class="dc-tab-count"><%= @companies_using_skill.size %></span>
+        <% end %>
+      </nav>
+      <% if filtered %><%= link_to "Clear filters", developers_directory_path, class: "dc-link dc-tabs-action" %><% end %>
+    </div>
+  <% end %>
 
-  <% if @developers.any? %>
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <% @developers.each do |developer| %>
-        <%= render "home/developer_card", developer: %>
+  <% if @results_tab == :companies %>
+    <div id="companies-results" role="tabpanel" aria-label="Companies">
+      <% if @companies_using_skill.any? %>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <% @companies_using_skill.each do |company| %>
+            <%= render "site/companies/company_card", company:, job_count: @company_job_counts.fetch(company.id, 0) %>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="dc-empty p-12">
+          <p class="dc-heading text-3xl">No companies list <%= @selected_skill.name %> yet.</p>
+          <p class="mt-2 text-[#555]">Companies can add it to the technologies on their profile.</p>
+        </div>
       <% end %>
     </div>
-    <%= render "site/shared/pagination" %>
   <% else %>
-    <div class="dc-empty p-12">
-      <p class="dc-heading text-3xl">No one matches that yet.</p>
-      <p class="mt-2 text-[#555]">Try fewer filters<%= ", or sign in to see members-only profiles" unless current_user %>.</p>
+    <div id="developers-results" role="tabpanel" aria-label="Developers">
+      <% if @developers.any? %>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <% @developers.each do |developer| %>
+            <%= render "home/developer_card", developer: %>
+          <% end %>
+        </div>
+        <%= render "site/shared/pagination" %>
+      <% else %>
+        <div class="dc-empty p-12">
+          <p class="dc-heading text-3xl">No one matches that yet.</p>
+          <p class="mt-2 text-[#555]">Try fewer filters<%= ", or sign in to see members-only profiles" unless current_user %>.</p>
+        </div>
+      <% end %>
     </div>
   <% end %>
 </section>

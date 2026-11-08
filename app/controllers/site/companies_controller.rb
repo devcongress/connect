@@ -28,6 +28,7 @@ module Site
       @viewer_profile = current_user&.developer_profile
       @following = @viewer_profile&.following_company?(@company) || false
       @followers_count = @company.company_follows.count
+      @technologies = @company.technologies.order(:name)
     end
   end
 end

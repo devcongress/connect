@@ -4,7 +4,7 @@ class HomeController < Site::BaseController
   def index
     listed = Developers::Profile.visible_to(current_user)
     @stats = {
-      developers: listed.count,
+      developers: Developers::Profile.count,
       companies: Company.organizations.count,
       open_jobs: Hiring::JobPost.visible_to(current_user).count
     }

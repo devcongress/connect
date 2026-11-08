@@ -1,6 +1,6 @@
 # Idempotent: safe to run on every deploy (bin/rails db:seed).
 
-# Skills for profiles and project stacks. See db/seeds/skills.yml for where the
+# Skills for profiles, project stacks and company technologies. See db/seeds/skills.yml for where the
 # list comes from. The catalogue is the source of truth for names and categories;
 # skill_descriptions.yml adds precise copy where category-level copy is too broad.
 catalogue = SkillDescription.catalogue

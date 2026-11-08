@@ -18,12 +18,12 @@ class CompanyPolicy < ::ResourcePolicy
 
   def permitted_attributes_for_create
     [:name, :slug, :logo, :tagline, :organization_type, :industry, :founded_year,
-      :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
+      :technologies, :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
   end
 
   def permitted_attributes_for_read
     [:name, :slug, :logo, :tagline, :organization_type, :industry, :founded_year,
-      :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
+      :technologies, :website, :github_url, :linkedin_url, :x_url, :description, :city, :country]
   end
 
   # Associations

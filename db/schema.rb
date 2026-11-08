@@ -113,6 +113,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_07_150000) do
     t.index ["slug"], name: "index_companies_on_slug", unique: true
   end
 
+  create_table "company_technologies", force: :cascade do |t|
+    t.integer "company_id", null: false
+    t.integer "skill_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "skill_id"], name: "index_company_technologies_on_company_id_and_skill_id", unique: true
+    t.index ["skill_id"], name: "index_company_technologies_on_skill_id"
+  end
+
   create_table "company_user_invites", force: :cascade do |t|
     t.integer "company_id", null: false
     t.string "email", null: false
@@ -426,6 +435,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_07_150000) do
   add_foreign_key "admin_remember_keys", "admins", column: "id"
   add_foreign_key "admin_verification_keys", "admins", column: "id"
   add_foreign_key "companies", "users", column: "personal_owner_id", on_delete: :cascade
+  add_foreign_key "company_technologies", "companies", on_delete: :cascade
+  add_foreign_key "company_technologies", "skills"
   add_foreign_key "company_user_invites", "companies"
   add_foreign_key "company_user_invites", "users"
   add_foreign_key "company_users", "companies"

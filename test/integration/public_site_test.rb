@@ -106,9 +106,9 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     get "/devs", params: {skill: "elixir"}
 
     assert_response :success
-    assert_select "h1", "Elixir developers"
+    assert_select "h1", "Elixir"
     assert_includes response.body, @elixir.description
-    assert_select "title", "Elixir developers · DevCongress Connect"
+    assert_select "title", "Elixir developers and companies · DevCongress Connect"
     assert_select "meta[name=description][content=?]", @elixir.description
     assert_select "link[rel=canonical][href='http://www.example.com/technical-skills/elixir']"
     assert_select "meta[name=robots][content=noindex]"
@@ -116,7 +116,7 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     get "/technical-skills/elixir", params: {country: "Nowhere"}
 
     assert_response :success
-    assert_select "h1", "Elixir developers"
+    assert_select "h1", "Elixir"
     assert_includes response.body, @elixir.description
     assert_includes response.body, "No one matches that yet."
   end
@@ -127,6 +127,39 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
 
     get "/devs", params: {skill: "not-a-real-skill"}
     assert_response :not_found
+  end
+
+  test "skill pages list organization profiles that use the technology" do
+    @company.technologies << @elixir
+    personal = Company.personal_for!(@public.user)
+    personal.technologies << @elixir
+
+    get "/technical-skills/elixir"
+
+    assert_response :success
+    assert_select "section.dc-container" do
+      assert_select "[role=tablist]" do
+        assert_select "a[role=tab][aria-selected=true]", text: /Developers/
+        assert_select "a[role=tab][aria-selected=false][href*='tab=companies']", text: /Companies/
+      end
+      assert_select ".dc-tabs-row > a", text: "Clear filters"
+      assert_select "#developers-results[role=tabpanel]"
+      assert_not_includes response.body, "1 developer match"
+      assert_select "a[href='/companies/acme-labs']", count: 0
+    end
+
+    get "/technical-skills/elixir", params: {tab: "companies"}
+
+    assert_response :success
+    assert_select "section.dc-container" do
+      assert_select "a[role=tab][aria-selected=true]", text: /Companies/
+      assert_select ".dc-tabs-row > a", text: "Clear filters"
+      assert_select "#companies-results[role=tabpanel]" do
+        assert_select "a[href='/companies/acme-labs']", text: /Acme Labs/
+      end
+      assert_not_includes response.body, "1 company uses Elixir"
+      assert_select "a[href='/companies/#{personal.slug}']", count: 0
+    end
   end
 
   test "curated skill pages link to resources and reference companies using the skill" do
@@ -258,6 +291,8 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
   end
 
   test "company pages show organization profile details and social links" do
+    ruby = Skill.find_or_create_by!(name: "Ruby")
+    postgresql = Skill.find_or_create_by!(name: "PostgreSQL")
     @company.update!(
       tagline: "Infrastructure for growing teams",
       organization_type: "business",
@@ -267,6 +302,7 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
       linkedin_url: "https://linkedin.com/company/acme",
       x_url: "https://x.com/acme"
     )
+    @company.technologies = [ruby, postgresql]
 
     get "/companies/acme-labs"
 
@@ -277,6 +313,11 @@ class PublicSiteTest < ActionDispatch::IntegrationTest
     assert_select "a[href='https://github.com/acme']", text: /GitHub/
     assert_select "a[href='https://linkedin.com/company/acme']", text: /LinkedIn/
     assert_select "a[href='https://x.com/acme']", text: /X/
+    assert_select "h2", text: "Technologies"
+    assert_select "ul[aria-label='Technologies used by Acme Labs']" do
+      assert_select "a[href='/technical-skills/postgresql']", text: "PostgreSQL"
+      assert_select "a[href='/technical-skills/ruby']", text: "Ruby"
+    end
   end
 
   test "company logos are shown on profiles and served from a public image endpoint" do

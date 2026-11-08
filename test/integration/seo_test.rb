@@ -81,6 +81,7 @@ class SeoTest < ActionDispatch::IntegrationTest
   end
 
   test "company pages get an Organization" do
+    @company.technologies << Skill.create!(name: "Ruby")
     @company.update!(
       tagline: "Infrastructure for growing teams",
       industry: "Developer tools",
@@ -95,6 +96,7 @@ class SeoTest < ActionDispatch::IntegrationTest
     assert_equal ["Organization", "Acme Labs", "Infrastructure for growing teams", "Developer tools", "2018"],
       data.values_at("@type", "name", "slogan", "industry", "foundingDate")
     assert_equal ["https://github.com/acme", "https://x.com/acme"], data["sameAs"]
+    assert_equal ["Ruby"], data["knowsAbout"]
   end
 
   test "public projects get a CreativeWork crediting the owner" do

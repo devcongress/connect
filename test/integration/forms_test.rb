@@ -41,18 +41,21 @@ class FormsTest < ActionDispatch::IntegrationTest
   end
 
   test "owners can edit their company's details" do
+    ruby = Skill.create!(name: "Ruby")
     login_user(@user)
     get "/company/acme-labs/company/edit"
     assert_response :success
     %w[name logo tagline organization_type industry founded_year website github_url linkedin_url x_url description country city].each do |attribute|
       assert_select "[name='company[#{attribute}]']"
     end
+    assert_select "[name='company[technologies][]']"
 
     patch "/company/acme-labs/company", params: {company: {
       tagline: "Tools for teams across Africa",
       organization_type: "business",
       industry: "Developer tools",
       founded_year: "2018",
+      technologies: [ruby.to_signed_global_id.to_s],
       website: "https://acme.example",
       github_url: "https://github.com/acme",
       linkedin_url: "https://linkedin.com/company/acme",
@@ -66,6 +69,7 @@ class FormsTest < ActionDispatch::IntegrationTest
       @company.reload.slice(:tagline, :organization_type, :industry, :founded_year, :website, :github_url,
         :linkedin_url, :x_url, :country, :city).values
     )
+    assert_equal [ruby], @company.technologies
 
     get "/company/acme-labs/company"
     assert_includes response.body, "2018"
@@ -79,7 +83,7 @@ class FormsTest < ActionDispatch::IntegrationTest
     get "/company/#{personal.slug}/company/edit"
 
     assert_response :success
-    %w[logo tagline organization_type industry founded_year github_url linkedin_url x_url].each do |attribute|
+    %w[logo tagline organization_type industry founded_year technologies github_url linkedin_url x_url].each do |attribute|
       assert_select "[name='company[#{attribute}]']", count: 0
     end
   end

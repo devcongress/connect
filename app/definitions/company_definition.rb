@@ -11,6 +11,7 @@ class CompanyDefinition < ::ResourceDefinition
   field :organization_type, condition: -> { !object.personal? }
   field :industry, condition: -> { !object.personal? }
   field :founded_year, label: "Year of establishment", condition: -> { !object.personal? }
+  field :technologies, label: "Technologies", condition: -> { !object.personal? }
   field :github_url, as: :url, label: "GitHub", condition: -> { !object.personal? }
   field :linkedin_url, as: :url, label: "LinkedIn", condition: -> { !object.personal? }
   field :x_url, as: :url, label: "X (formerly Twitter)", condition: -> { !object.personal? }
@@ -23,6 +24,9 @@ class CompanyDefinition < ::ResourceDefinition
   input :organization_type, as: :select, choices: Company::ORGANIZATION_TYPES.to_a, placeholder: "Choose a type"
   input :industry, placeholder: "e.g. Financial services"
   input :founded_year, placeholder: "e.g. 2018"
+  input :technologies, label: "Technologies",
+    hint: "Languages, frameworks, databases and tools your team uses.",
+    condition: -> { !object.personal? }, wrapper: {class: "col-span-full"}
   input :website, placeholder: "https://"
   input :github_url, placeholder: "https://github.com/your-company"
   input :linkedin_url, placeholder: "https://linkedin.com/company/your-company"
@@ -39,10 +43,12 @@ class CompanyDefinition < ::ResourceDefinition
     display attribute, wrapper: {class: "col-span-full"}
   end
   display :founded_year, formatter: ->(year) { year&.to_s }, wrapper: {class: "col-span-full"}
+  display :technologies, label: "Technologies", wrapper: {class: "col-span-full"}
 
   form_layout do
     section :company, :name, :tagline, :logo, :slug, label: "Company", columns: 1
     section :about, :organization_type, :industry, :founded_year, :description, label: "About", columns: 2
+    section :technologies, :technologies, label: "Technologies"
     section :location, :country, :city, label: "Location", columns: 2
     section :links, :website, :github_url, :linkedin_url, :x_url, label: "Links", columns: 1
     ungrouped label: "Other"
@@ -52,6 +58,7 @@ class CompanyDefinition < ::ResourceDefinition
     section :company, :name, :tagline, :logo, :slug, label: "Company"
     section :location, :country, :city, label: "Location"
     section :about, :organization_type, :industry, :founded_year, :description, label: "About"
+    section :technologies, :technologies, label: "Technologies"
     section :links, :website, :github_url, :linkedin_url, :x_url, label: "Links"
     ungrouped label: "Other"
   end

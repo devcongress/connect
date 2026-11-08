@@ -65,6 +65,17 @@
     </section>
   <% end %>
 
+  <% if @technologies.any? %>
+    <section class="mt-10">
+      <h2 class="dc-heading text-3xl">Technologies</h2>
+      <ul class="mt-4 flex flex-wrap gap-2" aria-label="Technologies used by <%= company.display_name %>">
+        <% @technologies.each do |technology| %>
+          <li><%= link_to technology.name, technical_skill_path(technology), class: "dc-pill dc-pill-sm" %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
   <section class="mt-10">
     <h2 class="dc-heading text-3xl">Open jobs</h2>
     <% if @jobs.any? %>

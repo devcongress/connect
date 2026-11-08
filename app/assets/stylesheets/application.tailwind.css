@@ -309,6 +309,54 @@ body {
   .dc-pill-sm { padding: 0.35rem 1rem; }
   .dc-pill[aria-current="page"] { background: var(--dc-black); border-color: var(--dc-black); color: #fff; }
 
+  /* Browser-style tabs: the selected tab joins the panel below the rail. */
+  .dc-tabs-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    border-bottom: 2px solid var(--dc-black);
+  }
+  .dc-tabs {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+  .dc-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-bottom: -2px;
+    padding: 0.65rem 1.25rem;
+    border: 2px solid transparent;
+    border-bottom-color: var(--dc-black);
+    border-radius: 12px 12px 0 0;
+    color: var(--dc-text-mid);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .dc-tab:hover {
+    background: var(--dc-yellow-bg);
+    border-color: var(--dc-black);
+  }
+  .dc-tab[aria-selected="true"] {
+    background: var(--dc-bg);
+    border-color: var(--dc-black);
+    border-bottom-color: var(--dc-bg);
+    color: var(--dc-black);
+  }
+  .dc-tab-count {
+    color: var(--dc-text-muted);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .dc-tab[aria-selected="true"] .dc-tab-count { color: var(--dc-black); }
+  .dc-tabs-action { margin-left: auto; padding-bottom: 0.75rem; }
+
   /* "Learn more →" style text link. */
   .dc-link { color: var(--dc-pink); font-size: 0.875rem; font-weight: 600; transition: opacity 0.15s; }
   .dc-link:hover { opacity: 0.7; }
