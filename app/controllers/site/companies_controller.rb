@@ -25,6 +25,7 @@ module Site
       end
 
       @jobs = Hiring::JobPost.visible_to(current_user).where(company: @company).newest
+      @technologies = @company.technologies.order(:name)
     end
   end
 end

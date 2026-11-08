@@ -42,4 +42,14 @@ class CompanyTest < ActiveSupport::TestCase
     assert company.errors[:linkedin_url].any?
     assert company.errors[:x_url].any?
   end
+
+  test "lists canonical skills as technologies without duplicates" do
+    company = Company.create!(name: "Acme Labs")
+    ruby = Skill.create!(name: "Ruby")
+
+    company.technologies << ruby
+
+    assert_equal [ruby], company.technologies
+    assert_not company.company_technologies.build(skill: ruby).valid?
+  end
 end

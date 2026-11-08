@@ -6,6 +6,16 @@ module Site
       @countries = scope.where.not(country: [nil, ""]).distinct.order(:country).pluck(:country)
       @skills = Skill.joins(profile_skills: :profile).merge(scope).distinct.order(:name).to_a
       @skills = (@skills << @selected_skill).compact.uniq(&:id).sort_by(&:name)
+      @companies_using_skill = @selected_skill&.companies&.organizations&.order(:name) || Company.none
+      @results_tab = (@selected_skill && params[:tab] == "companies") ? :companies : :developers
+      @company_job_counts = if @results_tab == :companies
+        Hiring::JobPost.visible_to(current_user)
+          .where(company_id: @companies_using_skill.select(:id))
+          .group(:company_id)
+          .count
+      else
+        {}
+      end
 
       scope = Developers::DirectorySearch.call(
         scope:,
