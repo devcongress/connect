@@ -1,5 +1,5 @@
 <% personal = current_scoped_entity.personal? %>
-<%= render Plutonium::UI::Layout::IconRail.new(
+<%= render PortalIconRail.new(
       menu: Phlexi::Menu::Builder.new do |m|
         m.item "Overview", url: root_path, icon: Phlex::TablerIcons::LayoutDashboard
         m.item "Posts", url: resource_url_for(Hiring::JobPost, parent: nil), icon: Phlex::TablerIcons::Briefcase
@@ -10,7 +10,7 @@
           m.item "Members", url: resource_url_for(CompanyUser, parent: nil), icon: Phlex::TablerIcons::Users
           m.item "Invitations", url: resource_url_for(Invites::CompanyUserInvite, parent: nil), icon: Phlex::TablerIcons::Mail
         end
-        m.item "Home", url: home_dashboard_path, icon: Phlex::TablerIcons::Home
+        m.item "Dashboard", url: home_dashboard_path, icon: Phlex::TablerIcons::Home
       end
     ) do |rail| %>
   <% rail.with_brand do %>

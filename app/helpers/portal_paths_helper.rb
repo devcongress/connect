@@ -18,6 +18,10 @@ module PortalPathsHelper
     PortalPathsHelper.routes.dashboard_portal.root_path
   end
 
+  def public_home_path
+    PortalPathsHelper.routes.root_path
+  end
+
   def notification_settings_dashboard_path
     PortalPathsHelper.routes.dashboard_portal.notification_settings_path
   end

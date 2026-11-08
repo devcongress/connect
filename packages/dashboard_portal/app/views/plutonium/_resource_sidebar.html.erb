@@ -1,7 +1,7 @@
 <% profile = current_user.developer_profile %>
-<%= render Plutonium::UI::Layout::IconRail.new(
+<%= render PortalIconRail.new(
       menu: Phlexi::Menu::Builder.new do |m|
-        m.item "Home", url: root_path, icon: Phlex::TablerIcons::Home
+        m.item "Dashboard", url: root_path, icon: Phlex::TablerIcons::Home
 
         if profile
           m.item "Developer profile", url: developer_portal_home_path(profile), icon: Phlex::TablerIcons::Id
